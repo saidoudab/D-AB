@@ -574,10 +574,19 @@
 function ajouterPanier(nom, prix) {
     let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
 
-    panier.push({
-        nom: nom,
-        prix: prix
+    let produitExistant = panier.find(function(produit) {
+        return produit.nom === nom;
     });
+
+    if (produitExistant) {
+        produitExistant.quantite = (produitExistant.quantite || 1) + 1;
+    } else {
+        panier.push({
+            nom: nom,
+            prix: prix,
+            quantite: 1
+        });
+    }
 
     localStorage.setItem('panierDAB', JSON.stringify(panier));
 
