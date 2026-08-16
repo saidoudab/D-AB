@@ -230,7 +230,7 @@ if (!nomClient || !telephoneClient || !lieuClient) {
     "Téléphone : " + telephoneClient + "%0A" +
     "Lieu de livraison : " + lieuClient + "%0A%0A" +
     "Commande :%0A";
-
+let total = 0;
     panier.forEach(function(produit) {
         message +=
     "- " + produit.nom +
