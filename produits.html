@@ -1,11 +1,13 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Produits - D-AB</title>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,117 +16,555 @@
     }
 
     body {
-      background: #f5f7fa;
-      color: #172033;
+      background: #f4f6fa;
+      color: #14213d;
+      padding-bottom: 85px;
     }
+
+    /* EN-TÊTE */
 
     header {
-      background: #172033;
+      background: #071a3d;
       color: white;
-      text-align: center;
-      padding: 30px 20px;
+      padding: 18px 16px 22px;
     }
 
-    header h1 {
-      font-size: 34px;
-      margin-bottom: 10px;
-    }
-
-    header p {
-      color: #d9dde5;
-      font-size: 18px;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: auto;
-      padding: 25px 20px 50px;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
     }
 
     .back {
-      display: inline-block;
-      margin-bottom: 25px;
-      color: #172033;
+      color: white;
       text-decoration: none;
-      font-weight: bold;
-      font-size: 17px;
+      font-size: 25px;
     }
 
-    .title {
-      font-size: 30px;
-      margin-bottom: 20px;
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #ffb703;
+    }
+
+    .cart {
+      font-size: 25px;
+    }
+
+    /* RECHERCHE */
+
+    .search {
+      background: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+    }
+
+    .search input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: #333;
+    }
+
+    /* CONTENU */
+
+    main {
+      max-width: 700px;
+      margin: auto;
+      padding: 22px 16px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .section-title h2 {
+      font-size: 24px;
+    }
+
+    .section-title span {
+      color: #777;
+      font-size: 14px;
+    }
+
+    /* CATÉGORIES */
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      margin-bottom: 28px;
+      padding-bottom: 5px;
+    }
+
+    .category {
+      min-width: 90px;
+      background: white;
+      border-radius: 14px;
+      padding: 13px 8px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .category .icon {
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .category p {
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    /* PRODUITS */
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
     }
 
     .product {
       background: white;
-      border-radius: 20px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      border-radius: 17px;
+      overflow: hidden;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.08);
     }
 
-    .product h2 {
-      font-size: 22px;
+    .product-image {
+      height: 145px;
+      background: #edf0f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 70px;
+    }
+
+    .product-content {
+      padding: 13px;
+    }
+
+    .product h3 {
+      font-size: 16px;
+      margin-bottom: 7px;
+    }
+
+    .description {
+      color: #7a8190;
+      font-size: 13px;
+      line-height: 1.4;
       margin-bottom: 10px;
     }
 
-    .product p {
-      color: #6b7280;
-      font-size: 17px;
+    .price {
+      color: #071a3d;
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .seller {
+      color: #8a8f9c;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 7px;
+    }
+
+    .btn {
+      flex: 1;
+      border: none;
+      border-radius: 9px;
+      padding: 10px 5px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn-contact {
+      background: #071a3d;
+      color: white;
+    }
+
+    .btn-cart {
+      background: #ffb703;
+      color: #071a3d;
+    }
+
+    /* BANDEAU VENDEUR */
+
+    .seller-box {
+      margin-top: 28px;
+      background: #071a3d;
+      color: white;
+      padding: 20px;
+      border-radius: 17px;
+    }
+
+    .seller-box h2 {
+      margin-bottom: 8px;
+    }
+
+    .seller-box p {
+      color: #d5d9e2;
       line-height: 1.5;
       margin-bottom: 15px;
     }
 
-    .price {
-      color: #16a34a;
-      font-size: 22px;
+    .seller-box button {
+      width: 100%;
+      background: #ffb703;
+      color: #071a3d;
+      border: none;
+      padding: 13px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    /* MENU BAS */
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 11px 4px;
+      box-shadow: 0 -3px 15px rgba(0,0,0,0.10);
+      z-index: 20;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #6e7480;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    nav .icon {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 3px;
+    }
+
+    nav .active {
+      color: #ff9f00;
       font-weight: bold;
     }
 
-    footer {
-      text-align: center;
-      color: #6b7280;
-      padding: 25px;
+    @media (min-width: 700px) {
+      .products {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
+
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>D-AB</h1>
-    <p>Nos produits</p>
-  </header>
+<header>
 
-  <main class="container">
+  <div class="topbar">
 
-    <a class="back" href="index.html">← Retour à l'accueil</a>
+    <a class="back" href="index.html">←</a>
 
-    <h2 class="title">🛍️ Produits</h2>
-
-    <div class="product">
-      <h2>Produit 1</h2>
-      <p>Description du produit.</p>
-      <div class="price">Prix : à renseigner</div>
+    <div class="logo">
+      D-<span>AB</span>
     </div>
 
-    <div class="product">
-      <h2>Produit 2</h2>
-      <p>Description du produit.</p>
-      <div class="price">Prix : à renseigner</div>
+    <div class="cart">🛒</div>
+
+  </div>
+
+  <div class="search">
+    🔎&nbsp;
+    <input type="text" placeholder="Rechercher un produit...">
+  </div>
+
+</header>
+
+
+<main>
+
+  <div class="section-title">
+    <h2>Catégories</h2>
+    <span>Voir tout</span>
+  </div>
+
+  <div class="categories">
+
+    <div class="category">
+      <div class="icon">🏗️</div>
+      <p>BTP</p>
     </div>
 
-    <div class="product">
-      <h2>Produit 3</h2>
-      <p>Description du produit.</p>
-      <div class="price">Prix : à renseigner</div>
+    <div class="category">
+      <div class="icon">⚡</div>
+      <p>Électricité</p>
     </div>
 
-  </main>
+    <div class="category">
+      <div class="icon">🪚</div>
+      <p>Menuiserie</p>
+    </div>
 
-  <footer>
-    © 2026 D-AB — Tous droits réservés
-  </footer>
+    <div class="category">
+      <div class="icon">🎨</div>
+      <p>Décoration</p>
+    </div>
+
+    <div class="category">
+      <div class="icon">🔧</div>
+      <p>Plomberie</p>
+    </div>
+
+  </div>
+
+
+  <div class="section-title">
+    <h2>Produits populaires</h2>
+    <span>Voir tout</span>
+  </div>
+
+
+  <div class="products">
+
+    <!-- PRODUIT 1 -->
+
+    <div class="product">
+
+      <div class="product-image">
+        🧱
+      </div>
+
+      <div class="product-content">
+
+        <h3>Ciment 32,5R</h3>
+
+        <p class="description">
+          Ciment de qualité pour vos travaux de construction.
+        </p>
+
+        <div class="price">
+          6 000 FCFA / sac
+        </div>
+
+        <div class="seller">
+          Bâtir Plus Construction
+        </div>
+
+        <div class="buttons">
+
+          <button
+            class="btn btn-contact"
+            onclick="location.href='https://wa.me/22606168510'">
+            WhatsApp
+          </button>
+
+          <button class="btn btn-cart">
+            + Panier
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- PRODUIT 2 -->
+
+    <div class="product">
+
+      <div class="product-image">
+        🏗️
+      </div>
+
+      <div class="product-content">
+
+        <h3>Fer à béton 12 mm</h3>
+
+        <p class="description">
+          Fer à béton solide pour vos chantiers.
+        </p>
+
+        <div class="price">
+          4 500 FCFA
+        </div>
+
+        <div class="seller">
+          D-AB Marketplace
+        </div>
+
+        <div class="buttons">
+
+          <button
+            class="btn btn-contact"
+            onclick="location.href='https://wa.me/22606168510'">
+            WhatsApp
+          </button>
+
+          <button class="btn btn-cart">
+            + Panier
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- PRODUIT 3 -->
+
+    <div class="product">
+
+      <div class="product-image">
+        🎨
+      </div>
+
+      <div class="product-content">
+
+        <h3>Peinture intérieure</h3>
+
+        <p class="description">
+          Peinture professionnelle pour maisons et bâtiments.
+        </p>
+
+        <div class="price">
+          15 000 FCFA
+        </div>
+
+        <div class="seller">
+          D-AB Marketplace
+        </div>
+
+        <div class="buttons">
+
+          <button
+            class="btn btn-contact"
+            onclick="location.href='https://wa.me/22606168510'">
+            WhatsApp
+          </button>
+
+          <button class="btn btn-cart">
+            + Panier
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- PRODUIT 4 -->
+
+    <div class="product">
+
+      <div class="product-image">
+        🏠
+      </div>
+
+      <div class="product-content">
+
+        <h3>Carrelage 60×60</h3>
+
+        <p class="description">
+          Carrelage moderne pour intérieur et extérieur.
+        </p>
+
+        <div class="price">
+          9 000 FCFA
+        </div>
+
+        <div class="seller">
+          D-AB Marketplace
+        </div>
+
+        <div class="buttons">
+
+          <button
+            class="btn btn-contact"
+            onclick="location.href='https://wa.me/22606168510'">
+            WhatsApp
+          </button>
+
+          <button class="btn btn-cart">
+            + Panier
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="seller-box">
+
+    <h2>Vous êtes une entreprise ?</h2>
+
+    <p>
+      Présentez vos produits et services aux clients sur D-AB.
+    </p>
+
+    <button>
+      + Ajouter un produit
+    </button>
+
+  </div>
+
+</main>
+
+
+<nav>
+
+  <a href="index.html">
+    <span class="icon">🏠</span>
+    Accueil
+  </a>
+
+  <a href="produits.html" class="active">
+    <span class="icon">🛍️</span>
+    Produits
+  </a>
+
+  <a href="services.html">
+    <span class="icon">🔧</span>
+    Services
+  </a>
+
+  <a href="realisations.html">
+    <span class="icon">🏢</span>
+    Réalisations
+  </a>
+
+  <a href="contact.html">
+    <span class="icon">💬</span>
+    Contact
+  </a>
+
+</nav>
 
 </body>
 </html>
