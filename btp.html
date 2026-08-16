@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTP - D-AB</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6fa;
+      color: #14213d;
+    }
+
+    header {
+      background: #082b5c;
+      color: white;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .retour {
+      display: block;
+      margin: 20px;
+      color: #14213d;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .products {
+      padding: 0 20px 30px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .product h2 {
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 14px 0;
+    }
+
+    button {
+      border: none;
+      background: #ffb703;
+      color: #14213d;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🏗️ BTP</h1>
+    <p>D-AB Marketplace</p>
+  </header>
+
+  <a class="retour" href="produits.html">← Retour aux produits</a>
+
+  <div class="products">
+
+    <div class="product">
+      <h2>Ciment 32,5R</h2>
+      <p>Ciment de qualité pour vos travaux de construction.</p>
+      <div class="price">6 000 FCFA</div>
+      <button onclick="ajouterPanier('Ciment 32,5R', 6000)">+ Panier</button>
+    </div>
+
+    <div class="product">
+      <h2>Fer à béton 12 mm</h2>
+      <p>Fer à béton solide pour vos chantiers.</p>
+      <div class="price">4 500 FCFA</div>
+      <button onclick="ajouterPanier('Fer à béton 12 mm', 4500)">+ Panier</button>
+    </div>
+
+  </div>
+
+  <script>
+    function ajouterPanier(nom, prix) {
+      let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
+
+      let produitExistant = panier.find(function(produit) {
+        return produit.nom === nom;
+      });
+
+      if (produitExistant) {
+        produitExistant.quantite = (produitExistant.quantite || 1) + 1;
+      } else {
+        panier.push({
+          nom: nom,
+          prix: prix,
+          quantite: 1
+        });
+      }
+
+      localStorage.setItem('panierDAB', JSON.stringify(panier));
+      alert(nom + " a été ajouté au panier !");
+    }
+  </script>
+
+</body>
+</html>
