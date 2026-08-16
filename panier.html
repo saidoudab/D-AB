@@ -119,7 +119,30 @@ header h1 {
 <div class="total">
     Total : <span id="total">0</span> FCFA
 </div>
+<div style="background:white;padding:16px;border-radius:16px;margin:20px 0;">
+    <h3 style="margin-top:0;">Informations client</h3>
 
+    <input
+        id="nomClient"
+        type="text"
+        placeholder="Votre nom"
+        style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ccc;border-radius:8px;"
+    >
+
+    <input
+        id="telephoneClient"
+        type="tel"
+        placeholder="Votre téléphone"
+        style="width:100%;padding:12px;margin-bottom:10px;border:1px solid #ccc;border-radius:8px;"
+    >
+
+    <input
+        id="lieuClient"
+        type="text"
+        placeholder="Lieu de livraison"
+        style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;"
+    >
+</div>
 <button class="commander" onclick="commanderWhatsApp()">
     Commander sur WhatsApp
 </button>
@@ -188,14 +211,25 @@ function supprimerProduit(index) {
 }
 
 
-function commanderWhatsApp() {
+function commanderWhatsApp() { const nomClient = document.getElementById("nomClient").value.trim();
+const telephoneClient = document.getElementById("telephoneClient").value.trim();
+const lieuClient = document.getElementById("lieuClient").value.trim();
+
+if (!nomClient || !telephoneClient || !lieuClient) {
+    alert("Veuillez remplir votre nom, téléphone et lieu de livraison.");
+    return;
+}
     if (panier.length === 0) {
         alert("Votre panier est vide.");
         return;
     }
 
-    let message = "Bonjour D-AB, je souhaite commander :%0A%0A";
-    let total = 0;
+    let message =
+    "Bonjour D-AB, je souhaite commander :%0A%0A" +
+    "Nom : " + nomClient + "%0A" +
+    "Téléphone : " + telephoneClient + "%0A" +
+    "Lieu de livraison : " + lieuClient + "%0A%0A" +
+    "Commande :%0A";
 
     panier.forEach(function(produit) {
         message +=
