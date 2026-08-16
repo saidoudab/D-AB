@@ -383,7 +383,7 @@
             WhatsApp
           </button>
 
-          <button class="btn btn-cart">
+          <button class="btn btn-cart" onclick="ajouterPanier('Ciment 32,5R', 6000)">
             + Panier
           </button>
 
@@ -426,7 +426,7 @@
             WhatsApp
           </button>
 
-          <button class="btn btn-cart">
+          <button class="btn btn-cart" onclick="ajouterPanier('Fer à béton 12 mm', 4500)">
             + Panier
           </button>
 
@@ -570,6 +570,19 @@
   </a>
 
 </nav>
+<script>
+function ajouterPanier(nom, prix) {
+    let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
 
+    panier.push({
+        nom: nom,
+        prix: prix
+    });
+
+    localStorage.setItem('panierDAB', JSON.stringify(panier));
+
+    alert(nom + " a été ajouté au panier !");
+}
+</script>
 </body>
 </html>
