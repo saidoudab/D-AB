@@ -170,7 +170,6 @@ function afficherPanier() {
     totalElement.textContent = total.toLocaleString("fr-FR");
 }
 
-function supprimerProduit(index) {
     function changerQuantite(index, changement) {
     panier[index].quantite += changement;
 
@@ -180,11 +179,14 @@ function supprimerProduit(index) {
 
     localStorage.setItem("panierDAB", JSON.stringify(panier));
     afficherPanier();
-    }
+}
+
+function supprimerProduit(index) {
     panier.splice(index, 1);
     localStorage.setItem("panierDAB", JSON.stringify(panier));
     afficherPanier();
 }
+
 
 function commanderWhatsApp() {
     if (panier.length === 0) {
