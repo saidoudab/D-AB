@@ -143,14 +143,21 @@ function afficherPanier() {
     let total = 0;
 
     panier.forEach(function(produit, index) {
-        total += produit.prix;
+     if (!produit.quantite) {
+    produit.quantite = 1;
+     }   total += produit.prix * produit.quantite;
 
         liste.innerHTML += `
             <div class="panier-item">
                 <h3>${produit.nom}</h3>
                 <div class="prix">
                     ${produit.prix.toLocaleString("fr-FR")} FCFA
-                </div>
+                </div> 
+                <div style="display:flex;align-items:center;gap:10px;margin:12px 0;">
+    <button onclick="changerQuantite(${index}, -1)">−</button>
+    <strong>${produit.quantite}</strong>
+    <button onclick="changerQuantite(${index}, 1)">+</button>
+</div>
                 <br>
                 <button class="supprimer"
                     onclick="supprimerProduit(${index})">
@@ -164,6 +171,16 @@ function afficherPanier() {
 }
 
 function supprimerProduit(index) {
+    function changerQuantite(index, changement) {
+    panier[index].quantite += changement;
+
+    if (panier[index].quantite < 1) {
+        panier[index].quantite = 1;
+    }
+
+    localStorage.setItem("panierDAB", JSON.stringify(panier));
+    afficherPanier();
+    }
     panier.splice(index, 1);
     localStorage.setItem("panierDAB", JSON.stringify(panier));
     afficherPanier();
@@ -180,11 +197,12 @@ function commanderWhatsApp() {
 
     panier.forEach(function(produit) {
         message +=
-            "- " + produit.nom +
-            " : " + produit.prix.toLocaleString("fr-FR") +
-            " FCFA%0A";
+    "- " + produit.nom +
+    " x" + produit.quantite +
+    " : " + (produit.prix * produit.quantite).toLocaleString("fr-FR") +
+    " FCFA%0A";
 
-        total += produit.prix;
+      total += produit.prix * produit.quantite;
     });
 
     message +=
