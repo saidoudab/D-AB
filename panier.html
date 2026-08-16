@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon panier - D-AB</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6fa;
+    color: #14213d;
+}
+
+header {
+    background: #06244d;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+.back {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #14213d;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.panier-item {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.panier-item h3 {
+    margin: 0 0 8px;
+}
+
+.prix {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.supprimer {
+    border: none;
+    background: #f1f1f1;
+    color: #d32f2f;
+    padding: 10px 14px;
+    border-radius: 9px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.total {
+    background: #06244d;
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.commander {
+    display: block;
+    width: 100%;
+    border: none;
+    background: #ffb800;
+    color: #14213d;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 15px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.vide {
+    background: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 16px;
+    color: #777;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛒 Mon panier</h1>
+    <p>D-AB Marketplace</p>
+</header>
+
+<main class="container">
+
+<a class="back" href="produits.html">← Continuer mes achats</a>
+
+<div id="liste-panier"></div>
+
+<div class="total">
+    Total : <span id="total">0</span> FCFA
+</div>
+
+<button class="commander" onclick="commanderWhatsApp()">
+    Commander sur WhatsApp
+</button>
+
+</main>
+
+<script>
+let panier = JSON.parse(localStorage.getItem("panierDAB")) || [];
+
+function afficherPanier() {
+    const liste = document.getElementById("liste-panier");
+    const totalElement = document.getElementById("total");
+
+    liste.innerHTML = "";
+
+    if (panier.length === 0) {
+        liste.innerHTML =
+            '<div class="vide">Votre panier est vide 🛒</div>';
+    }
+
+    let total = 0;
+
+    panier.forEach(function(produit, index) {
+        total += produit.prix;
+
+        liste.innerHTML += `
+            <div class="panier-item">
+                <h3>${produit.nom}</h3>
+                <div class="prix">
+                    ${produit.prix.toLocaleString("fr-FR")} FCFA
+                </div>
+                <br>
+                <button class="supprimer"
+                    onclick="supprimerProduit(${index})">
+                    Supprimer
+                </button>
+            </div>
+        `;
+    });
+
+    totalElement.textContent = total.toLocaleString("fr-FR");
+}
+
+function supprimerProduit(index) {
+    panier.splice(index, 1);
+    localStorage.setItem("panierDAB", JSON.stringify(panier));
+    afficherPanier();
+}
+
+function commanderWhatsApp() {
+    if (panier.length === 0) {
+        alert("Votre panier est vide.");
+        return;
+    }
+
+    let message = "Bonjour D-AB, je souhaite commander :%0A%0A";
+    let total = 0;
+
+    panier.forEach(function(produit) {
+        message +=
+            "- " + produit.nom +
+            " : " + produit.prix.toLocaleString("fr-FR") +
+            " FCFA%0A";
+
+        total += produit.prix;
+    });
+
+    message +=
+        "%0ATotal : " +
+        total.toLocaleString("fr-FR") +
+        " FCFA";
+
+    window.location.href =
+        "https://wa.me/22606168510?text=" + message;
+}
+
+afficherPanier();
+</script>
+
+</body>
+</html>
