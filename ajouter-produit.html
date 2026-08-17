@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter un produit - D-AB</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      color: #172033;
+    }
+
+    header {
+      background: #172033;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #172033;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #f4b400;
+      color: #172033;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>D-AB</h1>
+  <p>Espace entreprise</p>
+</header>
+
+<main class="container">
+
+  <a class="back" href="produits.html">← Retour aux produits</a>
+
+  <div class="card">
+
+    <h2>Ajouter un produit</h2>
+    <p>Remplissez les informations de votre produit.</p>
+
+    <form>
+
+      <label>Nom du produit</label>
+      <input type="text" placeholder="Ex : Ciment 32,5R" required>
+
+      <label>Description</label>
+      <textarea placeholder="Décrivez votre produit" required></textarea>
+
+      <label>Prix</label>
+      <input type="text" placeholder="Ex : 6 000 FCFA" required>
+
+      <label>Nom de l'entreprise</label>
+      <input type="text" placeholder="Nom de votre entreprise" required>
+
+      <label>Téléphone / WhatsApp</label>
+      <input type="tel" placeholder="+226 ..." required>
+
+      <label>Photo du produit</label>
+      <input type="file" accept="image/*">
+
+      <button type="submit">Publier le produit</button>
+
+    </form>
+
+  </div>
+
+</main>
+
+</body>
+</html> 
