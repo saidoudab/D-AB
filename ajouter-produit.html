@@ -127,6 +127,26 @@
   </div>
 
 </main>
-
+<script>
+  const form = document.getElementById('formProduit');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const nom = document.getElementById('nomProduit').value;
+    const description = document.getElementById('descriptionProduit').value;
+    const prix = document.getElementById('prixProduit').value;
+    const entreprise = document.getElementById('entrepriseProduit').value;
+    const telephone = document.getElementById('telephoneProduit').value;
+    const photo = document.getElementById('photoProduit').files[0];
+    const produit = { nom, description, prix, entreprise, telephone };
+    let produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
+    produits.push(produit);
+    localStorage.setItem('produitsDAB', JSON.stringify(produits));
+    alert('Produit publié avec succès !');
+    form.reset();
+    });
+  </script>
+    
+    
+  
 </body>
 </html> 
