@@ -100,25 +100,25 @@
     <h2>Ajouter un produit</h2>
     <p>Remplissez les informations de votre produit.</p>
 
-    <form>
+    <form id="formProduit">
 
       <label>Nom du produit</label>
-      <input type="text" placeholder="Ex : Ciment 32,5R" required>
+      <input id="nomProduit" type="text" placeholder="Ex : Ciment 32,5R" required>
 
       <label>Description</label>
-      <textarea placeholder="Décrivez votre produit" required></textarea>
+      <textarea id="descriptionProduit" placeholder="Décrivez votre produit" required></textarea>
 
       <label>Prix</label>
-      <input type="text" placeholder="Ex : 6 000 FCFA" required>
+      <input id="prixProduit" type="text" placeholder="Ex : 6 000 FCFA" required>
 
       <label>Nom de l'entreprise</label>
-      <input type="text" placeholder="Nom de votre entreprise" required>
+      <input id="entrepriseProduit" type="text" placeholder="Nom de votre entreprise" required>
 
       <label>Téléphone / WhatsApp</label>
-      <input type="tel" placeholder="+226 ..." required>
+      <input id="telephoneProduit" type="tel" placeholder="+226 ..." required>
 
       <label>Photo du produit</label>
-      <input type="file" accept="image/*">
+      <input id="photoProduit" type="file" accept="image/*">
 
       <button type="submit">Publier le produit</button>
 
