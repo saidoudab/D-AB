@@ -577,8 +577,8 @@
     carte.className = 'produit-card';
     carte.innerHTML = '<h3>' + produit.nom + '</h3>';
     carte.innerHTML += '<p>' + produit.description + '</p>';
-    carte.innerHTML += '<p><strong>Prix : ' + produit.prix + ' FCFA</strong></p>';
-    carte.innerHTML += '<p>' + produit.contact + '</p>';
+    carte.innerHTML += '<p><strong>Prix : ' + produit.prix + '</strong></p>';
+    carte.innerHTML += '<p>' + (produit.contact || '') + '</p>';
     document.getElementById('liste-produits').appendChild(carte);
     });
 function ajouterPanier(nom, prix) {
