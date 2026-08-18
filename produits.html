@@ -574,11 +574,11 @@
   const produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
   produits.forEach(function(produit) {
     const carte = document.createElement('div');
-    carte.className = 'produit-card';
-    carte.innerHTML = '<h3>' + produit.nom + '</h3>';
-    carte.innerHTML += '<p>' + produit.description + '</p>';
-    carte.innerHTML += '<p><strong>Prix : ' + produit.prix + '</strong></p>';
-    carte.innerHTML += '<p>' + (produit.contact || '') + '</p>';
+    carte.className = 'product';
+    carte.innerHTML = '<div class="product-content"><h3>' + produit.nom + '</h3>';
+    carte.innerHTML += '<p class="description">' + produit.description + '</p>';
+    carte.innerHTML += '<div class="price">' + produit.prix + '</div>';
+    carte.innerHTML += '<div class="seller">' + (produit.contact || 'D-AB Marketplace') + '</div></div>';
     document.getElementById('liste-produits').appendChild(carte);
     });
 function ajouterPanier(nom, prix) {
