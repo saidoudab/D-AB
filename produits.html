@@ -577,7 +577,7 @@
     carte.className = 'product';
     carte.innerHTML = '<div class="product-content"><h3>' + produit.nom + '</h3>';
     carte.innerHTML += '<p class="description">' + produit.description + '</p>';
-    carte.innerHTML += '<div class="price">' + produit.prix + '</div>';
+    carte.innerHTML += '<div class="price">' + Number(produit.prix).toLocaleString('fr-FR') + ' FCFA' + '</div>';
     carte.innerHTML += '<div class="seller">' + (produit.contact || 'D-AB Marketplace') + '</div></div>'; carte.innerHTML += '<div class="buttons">';
     carte.innerHTML += '<button class="btn btn-contact">WhatsApp</button>';
     carte.innerHTML += '<button class="btn btn-cart">+ Panier</button>';
