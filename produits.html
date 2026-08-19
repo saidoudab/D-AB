@@ -578,7 +578,7 @@
   produits.forEach(function(produit) {
     const carte = document.createElement('div');
     carte.className = 'product';
-    if (produit.photo) carte.innerHTML += '<img src="' + produit.photo + '" class="product-img">';
+    if (produit.photo) carte.innerHTML += '<div class="product-image"><img src="' + produit.photo + '" class="product-img"></div>';
     carte.innerHTML += '<div class="product-content"><h3>' + produit.nom + '</h3>';
     carte.innerHTML += '<p class="description">' + produit.description + '</p>';
     carte.innerHTML += '<div class="price">' + Number(String(produit.prix).replace(/\D/g, '')).toLocaleString('fr-FR') + ' FCFA' + '</div>';
