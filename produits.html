@@ -303,7 +303,7 @@
 
   <div class="search">
     🔎&nbsp;
-    <input type="text" placeholder="Rechercher un produit...">
+    <input type="text" id="searchInput" placeholder="Rechercher un produit...">
   </div>
 
 </header>
@@ -631,6 +631,15 @@ function ajouterPanier(nom, prix) {
 
     alert(nom + " a été ajouté au panier !");
 }
+document.getElementById('searchInput').addEventListener('input', function () {
+  const recherche = this.value.toLowerCase().trim();
+  const liste = document.getElementById('liste-produits');
+
+  Array.from(liste.children).forEach(function (produit) {
+    const texte = produit.textContent.toLowerCase();
+    produit.style.display = texte.includes(recherche) ? '' : 'none';
+  });
+});
 </script>
 </body>
 </html>
