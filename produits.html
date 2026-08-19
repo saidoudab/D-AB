@@ -636,7 +636,7 @@ document.getElementById('searchInput').addEventListener('input', function () {
   const liste = document.getElementById('liste-produits');
 
   Array.from(liste.children).forEach(function (produit) {
-    const texte = produit.textContent.toLowerCase();
+    const texte = produit.querySelector('h3')?.textContent.toLowerCase() || '';
     produit.style.display = texte.includes(recherche) ? '' : 'none';
   });
 });
