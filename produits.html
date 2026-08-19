@@ -582,12 +582,28 @@
     carte.innerHTML += '<div class="product-content"><h3>' + produit.nom + '</h3>';
     carte.innerHTML += '<p class="description">' + produit.description + '</p>';
     carte.innerHTML += '<div class="price">' + Number(String(produit.prix).replace(/\D/g, '')).toLocaleString('fr-FR') + ' FCFA' + '</div>';
-    carte.innerHTML += '<div class="seller">' + (produit.entreprise || 'D-AB Marketplace') + '</div></div>'; carte.innerHTML += '<div class="buttons">';
-   carte.innerHTML += '<div class="buttons">'; carte.innerHTML += '<button class="btn btn-contact">WhatsApp</button>';
-    carte.innerHTML += '<button class="btn btn-cart">+ Panier</button>';
-    carte.innerHTML += '</div>';
-    carte.innerHTML += '</div>';
-    document.getElementById('liste-produits').appendChild(carte);
+    carte.innerHTML += '<div class="seller">' + (produit.entreprise || 'D-AB Marketplace') + '</div>';
+
+let numeroWhatsApp = String(produit.telephone || '').replace(/\D/g, '');
+numeroWhatsApp = numeroWhatsApp.replace(/^00/, '');
+
+if (numeroWhatsApp.length === 8) {
+  numeroWhatsApp = '226' + numeroWhatsApp;
+}
+
+carte.innerHTML += '<div class="buttons">';
+
+if (numeroWhatsApp) {
+  carte.innerHTML += '<button class="btn btn-contact" onclick="location.href=\'https://wa.me/' + numeroWhatsApp + '\'">WhatsApp</button>';
+} else {
+  carte.innerHTML += '<button class="btn btn-contact" disabled>WhatsApp</button>';
+}
+
+carte.innerHTML += '<button class="btn btn-cart">+ Panier</button>';
+carte.innerHTML += '</div>';
+carte.innerHTML += '</div>';
+
+document.getElementById('liste-produits').appendChild(carte);
     });
 function ajouterPanier(nom, prix) {
     let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
