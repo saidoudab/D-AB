@@ -602,7 +602,12 @@ if (numeroWhatsApp) {
 carte.innerHTML += '<button class="btn btn-cart">+ Panier</button>';
 carte.innerHTML += '</div>';
 carte.innerHTML += '</div>';
+const boutonPanier = carte.querySelector('.btn-cart');
 
+boutonPanier.addEventListener('click', function() {
+  const prixPanier = Number(String(produit.prix).replace(/\D/g, ''));
+  ajouterPanier(produit.nom, prixPanier);
+});
 document.getElementById('liste-produits').appendChild(carte);
     });
 function ajouterPanier(nom, prix) {
