@@ -575,13 +575,42 @@
   </a>
 
 </nav>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  const SUPABASE_URL = 'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
   const modeEntreprise = localStorage.getItem('modeEntreprise') === 'true';
 
 if (modeEntreprise) {
   document.getElementById('quitterEntreprise').style.display = 'block';
 }
-  const produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
+  supabaseClient
+  .from('produits')
+  .select('id, nom, description, prix, photo_url, entreprises(nom, telephone)')
+  .order('created_at', { ascending: false })
+  .then(function(result) {
+
+    if (result.error) {
+      console.error('Erreur chargement produits :', result.error);
+      return;
+    }
+
+    const produits = (result.data || []).map(function(p) {
+      return {
+        id: p.id,
+        nom: p.nom,
+        description: p.description || '',
+        prix: p.prix,
+        photo: p.photo_url || '',
+        entreprise: (p.entreprises && p.entreprises.nom) || 'D-AB Marketplace',
+        telephone: (p.entreprises && p.entreprises.telephone) || ''
+      };
+    });
   produits.forEach(function(produit, index) {
     const carte = document.createElement('div');
     carte.className = 'product';
@@ -619,6 +648,7 @@ boutonPanier.addEventListener('click', function() {
   ajouterPanier(produit.nom, prixPanier);
 });
 document.getElementById('liste-produits').appendChild(carte);
+    });
     });
 function ajouterPanier(nom, prix) {
     let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
