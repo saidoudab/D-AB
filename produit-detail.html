@@ -108,6 +108,10 @@
       background: #ffb703;
       color: #172033;
     }
+    .modifier {
+  background: #2563eb;
+  color: white;
+    }
     .supprimer {
   background: #d62828;
   color: white;
@@ -167,6 +171,7 @@
         ? '<a class="btn whatsapp" href="https://wa.me/' + numeroWhatsApp + '">WhatsApp</a>'
         : '') +
       '<button class="btn panier" id="ajouterPanier">+ Panier</button>' +
+'<button class="btn modifier" id="modifierProduit">Modifier le produit</button>' +
 '<button class="btn supprimer" id="supprimerProduit">Supprimer le produit</button>';
 
     document.getElementById('ajouterPanier').addEventListener('click', function() {
@@ -191,6 +196,9 @@
       localStorage.setItem('panierDAB', JSON.stringify(panier));
       alert(produit.nom + ' a été ajouté au panier !');
     });
+    document.getElementById('modifierProduit').addEventListener('click', function() {
+  location.href = 'modifier-produit.html?id=' + index;
+});
     document.getElementById('supprimerProduit').addEventListener('click', function() {
   const confirmation = confirm('Voulez-vous vraiment supprimer ce produit ?');
 
