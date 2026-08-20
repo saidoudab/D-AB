@@ -253,8 +253,9 @@ function commanderWhatsApp() {
         }
 
         const cle =
-            produit.entreprise_id ||
-            numero;
+    produit.entreprise_id ||
+    produit.entreprise ||
+    numero;
 
         if (!vendeurs[cle]) {
             vendeurs[cle] = {
