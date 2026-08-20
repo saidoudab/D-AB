@@ -127,31 +127,48 @@
   </div>
 
 </main>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const index = Number(params.get('id'));
+  const SUPABASE_URL = 'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
 
-  let produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
-  const produit = produits[index];
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+  const params = new URLSearchParams(window.location.search);
+  const idProduit = params.get('id');
+  let produit = null;
 
   const form = document.getElementById('formProduit');
   const retourFiche = document.getElementById('retourFiche');
 
-  retourFiche.href = 'produit-detail.html?id=' + index;
+  retourFiche.href = 'produit-detail.html?id=' + idProduit;
+  (async function chargerProduit() {
+  const { data, error } = await supabaseClient
+    .from('produits')
+    .select('id, entreprise_id, nom, description, prix, photo_url, entreprises(nom, telephone)')
+    .eq('id', idProduit)
+    .single();
 
-  if (!produit) {
+  if (error || !data) {
     alert('Produit introuvable.');
     location.href = 'produits.html';
-  } else {
-    document.getElementById('nomProduit').value = produit.nom || '';
-    document.getElementById('descriptionProduit').value = produit.description || '';
-    document.getElementById('prixProduit').value = produit.prix || '';
-    document.getElementById('entrepriseProduit').value = produit.entreprise || '';
-    document.getElementById('telephoneProduit').value = produit.telephone || '';
+    return;
   }
 
-  form.addEventListener('submit', function(event) {
+  produit = data;
+
+  document.getElementById('nomProduit').value = produit.nom || '';
+  document.getElementById('descriptionProduit').value = produit.description || '';
+  document.getElementById('prixProduit').value = produit.prix || '';
+  document.getElementById('entrepriseProduit').value =
+    (produit.entreprises && produit.entreprises.nom) || '';
+  document.getElementById('telephoneProduit').value =
+    (produit.entreprises && produit.entreprises.telephone) || '';
+})();
+
+  form.addEventListener('submit', async function(event) {
     event.preventDefault();
 
     const nom = document.getElementById('nomProduit').value;
@@ -161,32 +178,78 @@
     const telephone = document.getElementById('telephoneProduit').value;
     const nouvellePhoto = document.getElementById('photoProduit').files[0];
 
-    function enregistrerModification(photoData) {
-      produits[index] = {
-        nom,
-        description,
-        prix,
-        entreprise,
-        telephone,
-        photo: photoData
-      };
+    async function enregistrerModification(photoUrl) {
+  const prixNombre =
+    Number(String(prix).replace(/\D/g, ''));
 
-      localStorage.setItem('produitsDAB', JSON.stringify(produits));
+  const { error: profilError } =
+    await supabaseClient
+      .from('entreprises')
+      .update({
+        nom: entreprise,
+        telephone: telephone
+      })
+      .eq('id', produit.entreprise_id);
 
-      alert('Produit modifié avec succès !');
-      location.href = 'produit-detail.html?id=' + index;
+  if (profilError) {
+    alert('Erreur entreprise : ' + profilError.message);
+    return;
+  }
+
+  const { error } =
+    await supabaseClient
+      .from('produits')
+      .update({
+        nom: nom,
+        description: description,
+        prix: prixNombre,
+        photo_url: photoUrl
+      })
+      .eq('id', idProduit);
+
+  if (error) {
+    alert('Erreur modification : ' + error.message);
+    return;
+  }
+
+  alert('Produit modifié avec succès !');
+  location.href = 'produit-detail.html?id=' + idProduit;
     }
 
     if (nouvellePhoto) {
-      const reader = new FileReader();
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser();
 
-      reader.onload = function(e) {
-        enregistrerModification(e.target.result);
-      };
+  if (userError || !user) {
+    alert('Votre connexion entreprise a expiré. Reconnectez-vous.');
+    return;
+  }
 
-      reader.readAsDataURL(nouvellePhoto);
-    } else {
-      enregistrerModification(produit.photo || '');
+  const extension = nouvellePhoto.name.split('.').pop();
+  const nomFichier =
+    user.id + '/' + Date.now() + '.' + extension;
+
+  const { error: uploadError } =
+    await supabaseClient.storage
+      .from('produits')
+      .upload(nomFichier, nouvellePhoto);
+
+  if (uploadError) {
+    alert('Erreur photo : ' + uploadError.message);
+    return;
+  }
+
+  const { data: urlData } =
+    supabaseClient.storage
+      .from('produits')
+      .getPublicUrl(nomFichier);
+
+  await enregistrerModification(urlData.publicUrl);
+
+} else {
+  await enregistrerModification(produit.photo_url || '');
     }
   });
 </script>
