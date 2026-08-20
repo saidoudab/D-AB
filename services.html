@@ -339,6 +339,84 @@
         'Demander un devis sur WhatsApp';
 
       carte.appendChild(whatsapp);
+            if (
+        user &&
+        service.entreprise_id === user.id
+      ) {
+        const actions =
+          document.createElement('div');
+
+        actions.style.marginTop = '15px';
+        actions.style.display = 'flex';
+        actions.style.gap = '10px';
+
+        const modifier =
+          document.createElement('button');
+
+        modifier.textContent = 'Modifier';
+        modifier.style.flex = '1';
+        modifier.style.padding = '12px';
+        modifier.style.border = 'none';
+        modifier.style.borderRadius = '10px';
+        modifier.style.background = '#ffb703';
+        modifier.style.fontWeight = 'bold';
+
+        modifier.addEventListener(
+          'click',
+          function() {
+            location.href =
+              'modifier-service.html?id=' +
+              service.id;
+          }
+        );
+
+        const supprimer =
+          document.createElement('button');
+
+        supprimer.textContent = 'Supprimer';
+        supprimer.style.flex = '1';
+        supprimer.style.padding = '12px';
+        supprimer.style.border = 'none';
+        supprimer.style.borderRadius = '10px';
+        supprimer.style.background = '#dc3545';
+        supprimer.style.color = 'white';
+        supprimer.style.fontWeight = 'bold';
+
+        supprimer.addEventListener(
+          'click',
+          async function() {
+
+            const confirmation =
+              confirm(
+                'Voulez-vous vraiment supprimer ce service ?'
+              );
+
+            if (!confirmation) return;
+
+            const { error } =
+              await supabaseClient
+                .from('services')
+                .delete()
+                .eq('id', service.id);
+
+            if (error) {
+              alert(
+                'Erreur suppression : ' +
+                error.message
+              );
+              return;
+            }
+
+            alert('Service supprimé avec succès !');
+            location.reload();
+          }
+        );
+
+        actions.appendChild(modifier);
+        actions.appendChild(supprimer);
+
+        carte.appendChild(actions);
+                 }
 
       zoneServices.appendChild(carte);
     });
