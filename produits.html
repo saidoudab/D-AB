@@ -575,9 +575,15 @@
 </nav>
 <script>
   const produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
-  produits.forEach(function(produit) {
+  produits.forEach(function(produit, index) {
     const carte = document.createElement('div');
     carte.className = 'product';
+    carte.style.cursor = 'pointer';
+
+carte.addEventListener('click', function(event) {
+  if (event.target.closest('button')) return;
+  location.href = 'produit-detail.html?id=' + index;
+});
     carte.innerHTML += '<div class="product-image">' + (produit.photo ? '<img src="' + produit.photo + '" class="product-img">' : '📦') + '</div>';
     let numeroWhatsApp = String(produit.telephone || '').replace(/\D/g, '');
 numeroWhatsApp = numeroWhatsApp.replace(/^00/, '');
