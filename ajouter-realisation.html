@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter une réalisation - D-AB</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      color: #172033;
+    }
+
+    header {
+      background: #172033;
+      color: white;
+      text-align: center;
+      padding: 22px;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #172033;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 18px;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 18px;
+      margin-bottom: 7px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #ffb703;
+      color: #172033;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>D-AB</h1>
+  <p>Espace entreprise</p>
+</header>
+
+<main class="container">
+
+  <a class="back" href="realisations.html">
+    ← Retour aux réalisations
+  </a>
+
+  <div class="card">
+
+    <h2>📸 Ajouter une réalisation</h2>
+
+    <form id="formRealisation">
+
+      <label>Titre</label>
+      <input
+        id="titreRealisation"
+        type="text"
+        placeholder="Ex : Construction d'une villa"
+        required
+      >
+
+      <label>Description</label>
+      <textarea
+        id="descriptionRealisation"
+        placeholder="Décrivez les travaux réalisés"
+        required
+      ></textarea>
+
+      <label>Photo</label>
+      <input
+        id="photoRealisation"
+        type="file"
+        accept="image/*"
+        required
+      >
+
+      <button type="submit">
+        Publier la réalisation
+      </button>
+
+    </form>
+
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL =
+    'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+
+  const SUPABASE_KEY =
+    'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+  const form =
+    document.getElementById('formRealisation');
+
+  form.addEventListener(
+    'submit',
+    async function(event) {
+
+      event.preventDefault();
+
+      const {
+        data: { user },
+        error: userError
+      } = await supabaseClient.auth.getUser();
+
+      if (userError || !user) {
+        alert(
+          'Votre connexion entreprise a expiré. Reconnectez-vous.'
+        );
+        location.href =
+          'connexion-entreprise.html';
+        return;
+      }
+
+      const titre =
+        document
+          .getElementById('titreRealisation')
+          .value
+          .trim();
+
+      const description =
+        document
+          .getElementById('descriptionRealisation')
+          .value
+          .trim();
+
+      const photo =
+        document
+          .getElementById('photoRealisation')
+          .files[0];
+
+      if (!photo) {
+        alert('Veuillez choisir une photo.');
+        return;
+      }
+
+      const extension =
+        (photo.name.split('.').pop() || 'jpg')
+          .toLowerCase();
+
+      const nomFichier =
+        user.id +
+        '/' +
+        Date.now() +
+        '.' +
+        extension;
+
+      const {
+        error: uploadError
+      } =
+        await supabaseClient.storage
+          .from('realisations')
+          .upload(
+            nomFichier,
+            photo
+          );
+
+      if (uploadError) {
+        alert(
+          'Erreur photo : ' +
+          uploadError.message
+        );
+        return;
+      }
+
+      const {
+        data: urlData
+      } =
+        supabaseClient.storage
+          .from('realisations')
+          .getPublicUrl(nomFichier);
+
+      const photoUrl =
+        urlData.publicUrl;
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from('realisations')
+          .insert({
+            entreprise_id: user.id,
+            titre: titre,
+            description: description,
+            photo_url: photoUrl
+          });
+
+      if (error) {
+
+        await supabaseClient.storage
+          .from('realisations')
+          .remove([nomFichier]);
+
+        alert(
+          'Erreur publication : ' +
+          error.message
+        );
+
+        return;
+      }
+
+      alert(
+        'Réalisation publiée avec succès !'
+      );
+
+      location.href =
+        'realisations.html';
+    }
+  );
+</script>
+
+</body>
+</html>
