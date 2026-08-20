@@ -539,7 +539,9 @@
     <button onclick="localStorage.setItem('modeEntreprise','true'); location.href='ajouter-produit.html'">
       + Ajouter un produit
     </button>
-
+<button id="quitterEntreprise" style="display:none;" onclick="localStorage.removeItem('modeEntreprise'); location.reload();">
+  Quitter le mode entreprise
+</button>
   </div>
 
 </main>
@@ -574,6 +576,11 @@
 
 </nav>
 <script>
+  const modeEntreprise = localStorage.getItem('modeEntreprise') === 'true';
+
+if (modeEntreprise) {
+  document.getElementById('quitterEntreprise').style.display = 'block';
+}
   const produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
   produits.forEach(function(produit, index) {
     const carte = document.createElement('div');
