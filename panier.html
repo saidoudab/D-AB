@@ -211,14 +211,254 @@ function supprimerProduit(index) {
 }
 
 
-function commanderWhatsApp() { const nomClient = document.getElementById("nomClient").value.trim();
-const telephoneClient = document.getElementById("telephoneClient").value.trim();
-const lieuClient = document.getElementById("lieuClient").value.trim();
+function commanderWhatsApp() {
 
-if (!nomClient || !telephoneClient || !lieuClient) {
-    alert("Veuillez remplir votre nom, téléphone et lieu de livraison.");
-    return;
-}
+    const nomClient =
+        document.getElementById("nomClient").value.trim();
+
+    const telephoneClient =
+        document.getElementById("telephoneClient").value.trim();
+
+    const lieuClient =
+        document.getElementById("lieuClient").value.trim();
+
+    if (!nomClient || !telephoneClient || !lieuClient) {
+        alert(
+            "Veuillez remplir votre nom, téléphone et lieu de livraison."
+        );
+        return;
+    }
+
+    if (panier.length === 0) {
+        alert("Votre panier est vide.");
+        return;
+    }
+
+    const vendeurs = {};
+    let vendeurManquant = false;
+
+    panier.forEach(function(produit) {
+
+        let numero =
+            String(produit.telephone || "")
+                .replace(/\D/g, "")
+                .replace(/^00/, "");
+
+        if (numero.length === 8) {
+            numero = "226" + numero;
+        }
+
+        if (!numero) {
+            vendeurManquant = true;
+            return;
+        }
+
+        const cle =
+            produit.entreprise_id ||
+            numero;
+
+        if (!vendeurs[cle]) {
+            vendeurs[cle] = {
+                nom:
+                    produit.entreprise ||
+                    "Entreprise",
+                numero: numero,
+                produits: []
+            };
+        }
+
+        vendeurs[cle].produits.push(
+            produit
+        );
+    });
+
+    if (vendeurManquant) {
+        alert(
+            "Un ancien produit du panier ne contient pas encore les informations du vendeur. Supprimez-le du panier puis ajoutez-le de nouveau."
+        );
+        return;
+    }
+
+    function creerLienWhatsApp(vendeur) {
+
+        let message =
+            "Bonjour, je souhaite commander sur D-AB.\n\n" +
+            "Nom : " + nomClient + "\n" +
+            "Téléphone : " + telephoneClient + "\n" +
+            "Lieu de livraison : " + lieuClient + "\n\n" +
+            "Commande :\n";
+
+        let total = 0;
+
+        vendeur.produits.forEach(
+            function(produit) {
+
+                const quantite =
+                    produit.quantite || 1;
+
+                const sousTotal =
+                    produit.prix *
+                    quantite;
+
+                message +=
+                    "- " +
+                    produit.nom +
+                    " x" +
+                    quantite +
+                    " : " +
+                    sousTotal.toLocaleString(
+                        "fr-FR"
+                    ) +
+                    " FCFA\n";
+
+                total += sousTotal;
+            }
+        );
+
+        message +=
+            "\nTotal : " +
+            total.toLocaleString(
+                "fr-FR"
+            ) +
+            " FCFA";
+
+        return (
+            "https://wa.me/" +
+            vendeur.numero +
+            "?text=" +
+            encodeURIComponent(message)
+        );
+    }
+
+    const listeVendeurs =
+        Object.values(vendeurs);
+
+    if (listeVendeurs.length === 1) {
+
+        window.location.href =
+            creerLienWhatsApp(
+                listeVendeurs[0]
+            );
+
+        return;
+    }
+
+    const ancien =
+        document.getElementById(
+            "choixVendeurs"
+        );
+
+    if (ancien) {
+        ancien.remove();
+    }
+
+    const fond =
+        document.createElement("div");
+
+    fond.id = "choixVendeurs";
+
+    fond.style.position = "fixed";
+    fond.style.top = "0";
+    fond.style.left = "0";
+    fond.style.right = "0";
+    fond.style.bottom = "0";
+    fond.style.background =
+        "rgba(0,0,0,0.65)";
+    fond.style.display = "flex";
+    fond.style.alignItems = "center";
+    fond.style.justifyContent =
+        "center";
+    fond.style.padding = "20px";
+    fond.style.zIndex = "9999";
+
+    const boite =
+        document.createElement("div");
+
+    boite.style.background = "white";
+    boite.style.width = "100%";
+    boite.style.maxWidth = "450px";
+    boite.style.padding = "22px";
+    boite.style.borderRadius = "16px";
+
+    const titre =
+        document.createElement("h3");
+
+    titre.textContent =
+        "Votre panier contient plusieurs vendeurs";
+
+    boite.appendChild(titre);
+
+    const texte =
+        document.createElement("p");
+
+    texte.textContent =
+        "Envoyez une commande séparée à chaque entreprise.";
+
+    boite.appendChild(texte);
+
+    listeVendeurs.forEach(
+        function(vendeur) {
+
+            const bouton =
+                document.createElement(
+                    "button"
+                );
+
+            bouton.textContent =
+                "Commander chez " +
+                vendeur.nom;
+
+            bouton.style.width =
+                "100%";
+            bouton.style.padding =
+                "14px";
+            bouton.style.marginTop =
+                "12px";
+            bouton.style.border =
+                "none";
+            bouton.style.borderRadius =
+                "10px";
+            bouton.style.background =
+                "#ffb800";
+            bouton.style.fontWeight =
+                "bold";
+
+            bouton.onclick =
+                function() {
+
+                    window.open(
+                        creerLienWhatsApp(
+                            vendeur
+                        ),
+                        "_blank"
+                    );
+                };
+
+            boite.appendChild(
+                bouton
+            );
+        }
+    );
+
+    const fermer =
+        document.createElement(
+            "button"
+        );
+
+    fermer.textContent = "Fermer";
+    fermer.style.width = "100%";
+    fermer.style.padding = "12px";
+    fermer.style.marginTop = "15px";
+
+    fermer.onclick =
+        function() {
+            fond.remove();
+        };
+
+    boite.appendChild(fermer);
+    fond.appendChild(boite);
+    document.body.appendChild(fond);
+            }
     if (panier.length === 0) {
         alert("Votre panier est vide.");
         return;
