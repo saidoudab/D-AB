@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modifier un produit - D-AB</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      color: #172033;
+    }
+
+    header {
+      background: #172033;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #172033;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>D-AB</h1>
+  <p>Espace entreprise</p>
+</header>
+
+<main class="container">
+
+  <a class="back" id="retourFiche" href="produits.html">← Retour au produit</a>
+
+  <div class="card">
+
+    <h2>Modifier le produit</h2>
+    <p>Modifiez les informations souhaitées.</p>
+
+    <form id="formProduit">
+
+      <label>Nom du produit</label>
+      <input id="nomProduit" type="text" required>
+
+      <label>Description</label>
+      <textarea id="descriptionProduit" required></textarea>
+
+      <label>Prix</label>
+      <input id="prixProduit" type="text" required>
+
+      <label>Nom de l'entreprise</label>
+      <input id="entrepriseProduit" type="text" required>
+
+      <label>Téléphone / WhatsApp</label>
+      <input id="telephoneProduit" type="tel" required>
+
+      <label>Nouvelle photo (facultatif)</label>
+      <input id="photoProduit" type="file" accept="image/*">
+
+      <button type="submit">Enregistrer les modifications</button>
+
+    </form>
+
+  </div>
+
+</main>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const index = Number(params.get('id'));
+
+  let produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
+  const produit = produits[index];
+
+  const form = document.getElementById('formProduit');
+  const retourFiche = document.getElementById('retourFiche');
+
+  retourFiche.href = 'produit-detail.html?id=' + index;
+
+  if (!produit) {
+    alert('Produit introuvable.');
+    location.href = 'produits.html';
+  } else {
+    document.getElementById('nomProduit').value = produit.nom || '';
+    document.getElementById('descriptionProduit').value = produit.description || '';
+    document.getElementById('prixProduit').value = produit.prix || '';
+    document.getElementById('entrepriseProduit').value = produit.entreprise || '';
+    document.getElementById('telephoneProduit').value = produit.telephone || '';
+  }
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const nom = document.getElementById('nomProduit').value;
+    const description = document.getElementById('descriptionProduit').value;
+    const prix = document.getElementById('prixProduit').value;
+    const entreprise = document.getElementById('entrepriseProduit').value;
+    const telephone = document.getElementById('telephoneProduit').value;
+    const nouvellePhoto = document.getElementById('photoProduit').files[0];
+
+    function enregistrerModification(photoData) {
+      produits[index] = {
+        nom,
+        description,
+        prix,
+        entreprise,
+        telephone,
+        photo: photoData
+      };
+
+      localStorage.setItem('produitsDAB', JSON.stringify(produits));
+
+      alert('Produit modifié avec succès !');
+      location.href = 'produit-detail.html?id=' + index;
+    }
+
+    if (nouvellePhoto) {
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        enregistrerModification(e.target.result);
+      };
+
+      reader.readAsDataURL(nouvellePhoto);
+    } else {
+      enregistrerModification(produit.photo || '');
+    }
+  });
+</script>
+
+</body>
+</html>
