@@ -362,132 +362,76 @@ function commanderWhatsApp() {
     fond.style.left = "0";
     fond.style.right = "0";
     fond.style.bottom = "0";
-    fond.style.background =
-        "rgba(0,0,0,0.65)";
-    fond.style.display = "flex";
-    fond.style.alignItems = "center";
-    fond.style.justifyContent =
-        "center";
-    fond.style.padding = "20px";
-    fond.style.zIndex = "9999";
+    fond.style.background = "rgba(0,0,0,0.65)";
+fond.style.display = "flex";
+fond.style.alignItems = "center";
+fond.style.justifyContent = "center";
+fond.style.padding = "20px";
+fond.style.zIndex = "9999";
 
-    const boite =
-        document.createElement("div");
+const boite = document.createElement("div");
 
-    boite.style.background = "white";
-    boite.style.width = "100%";
-    boite.style.maxWidth = "450px";
-    boite.style.padding = "22px";
-    boite.style.borderRadius = "16px";
+boite.style.background = "white";
+boite.style.width = "100%";
+boite.style.maxWidth = "450px";
+boite.style.padding = "22px";
+boite.style.borderRadius = "16px";
 
-    const titre =
-        document.createElement("h3");
+const titre = document.createElement("h3");
 
-    titre.textContent =
-        "Votre panier contient plusieurs vendeurs";
+titre.textContent =
+    "Votre panier contient plusieurs vendeurs";
 
-    boite.appendChild(titre);
+boite.appendChild(titre);
 
-    const texte =
-        document.createElement("p");
+const texte = document.createElement("p");
 
-    texte.textContent =
-        "Envoyez une commande séparée à chaque entreprise.";
+texte.textContent =
+    "Envoyez une commande séparée à chaque entreprise.";
 
-    boite.appendChild(texte);
+boite.appendChild(texte);
 
-    listeVendeurs.forEach(
-        function(vendeur) {
+listeVendeurs.forEach(function(vendeur) {
 
-            const bouton =
-                document.createElement(
-                    "button"
-                );
+    const bouton =
+        document.createElement("button");
 
-            bouton.textContent =
-                "Commander chez " +
-                vendeur.nom;
+    bouton.textContent =
+        "Commander chez " + vendeur.nom;
 
-            bouton.style.width =
-                "100%";
-            bouton.style.padding =
-                "14px";
-            bouton.style.marginTop =
-                "12px";
-            bouton.style.border =
-                "none";
-            bouton.style.borderRadius =
-                "10px";
-            bouton.style.background =
-                "#ffb800";
-            bouton.style.fontWeight =
-                "bold";
+    bouton.style.width = "100%";
+    bouton.style.padding = "14px";
+    bouton.style.marginTop = "12px";
+    bouton.style.border = "none";
+    bouton.style.borderRadius = "10px";
+    bouton.style.background = "#ffb800";
+    bouton.style.fontWeight = "bold";
 
-            bouton.onclick =
-                function() {
-
-                    window.open(
-                        creerLienWhatsApp(
-                            vendeur
-                        ),
-                        "_blank"
-                    );
-                };
-
-            boite.appendChild(
-                bouton
-            );
-        }
-    );
-
-    const fermer =
-        document.createElement(
-            "button"
+    bouton.onclick = function() {
+        window.open(
+            creerLienWhatsApp(vendeur),
+            "_blank"
         );
+    };
 
-    fermer.textContent = "Fermer";
-    fermer.style.width = "100%";
-    fermer.style.padding = "12px";
-    fermer.style.marginTop = "15px";
+    boite.appendChild(bouton);
+});
 
-    fermer.onclick =
-        function() {
-            fond.remove();
-        };
+const fermer =
+    document.createElement("button");
 
-    boite.appendChild(fermer);
-    fond.appendChild(boite);
-    document.body.appendChild(fond);
-            }
-    if (panier.length === 0) {
-        alert("Votre panier est vide.");
-        return;
-    }
+fermer.textContent = "Fermer";
+fermer.style.width = "100%";
+fermer.style.padding = "12px";
+fermer.style.marginTop = "15px";
 
-    let message =
-    "Bonjour D-AB, je souhaite commander :%0A%0A" +
-    "Nom : " + nomClient + "%0A" +
-    "Téléphone : " + telephoneClient + "%0A" +
-    "Lieu de livraison : " + lieuClient + "%0A%0A" +
-    "Commande :%0A";
-let total = 0;
-    panier.forEach(function(produit) {
-        message +=
-    "- " + produit.nom +
-    " x" + produit.quantite +
-    " : " + (produit.prix * produit.quantite).toLocaleString("fr-FR") +
-    " FCFA%0A";
+fermer.onclick = function() {
+    fond.remove();
+};
 
-      total += produit.prix * produit.quantite;
-    });
-
-    message +=
-        "%0ATotal : " +
-        total.toLocaleString("fr-FR") +
-        " FCFA";
-
-    window.location.href =
-        "https://wa.me/22606168510?text=" + message;
+boite.appendChild(fermer);
+fond.appendChild(boite);
+document.body.appendChild(fond);
 }
 
 afficherPanier();
