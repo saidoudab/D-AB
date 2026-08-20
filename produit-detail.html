@@ -132,16 +132,41 @@
   <div class="card" id="ficheProduit"></div>
 
 </main>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const index = Number(params.get('id'));
+  const SUPABASE_URL = 'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
 
-  const produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
-  const produit = produits[index];
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+  const params = new URLSearchParams(window.location.search);
+  const idProduit = params.get('id');
+
+  
 
   const fiche = document.getElementById('ficheProduit');
 const modeEntreprise = localStorage.getItem('modeEntreprise') === 'true';
+  (async function() {
+
+  const { data: produit, error: produitError } =
+    await supabaseClient
+      .from('produits')
+      .select('id, entreprise_id, nom, description, prix, photo_url, entreprises(nom, telephone)')
+      .eq('id', idProduit)
+      .single();
+
+  if (produit) {
+    produit.photo = produit.photo_url || '';
+    produit.entreprise =
+      (produit.entreprises && produit.entreprises.nom) ||
+      'D-AB Marketplace';
+
+    produit.telephone =
+      (produit.entreprises && produit.entreprises.telephone) ||
+      '';
+  }
   if (!produit) {
     fiche.innerHTML = '<h2>Produit introuvable</h2>';
   } else {
@@ -201,20 +226,28 @@ if (!modeEntreprise) {
     });
     if (modeEntreprise) {
     document.getElementById('modifierProduit').addEventListener('click', function() {
-  location.href = 'modifier-produit.html?id=' + index;
+  location.href = 'modifier-produit.html?id=' + idProduit;
 });
-    document.getElementById('supprimerProduit').addEventListener('click', function() {
+    document.getElementById('supprimerProduit').addEventListener('click', async function() {
   const confirmation = confirm('Voulez-vous vraiment supprimer ce produit ?');
 
   if (!confirmation) return;
 
-  produits.splice(index, 1);
-  localStorage.setItem('produitsDAB', JSON.stringify(produits));
+  const { error: deleteError } =
+  await supabaseClient
+    .from('produits')
+    .delete()
+    .eq('id', idProduit);
 
+if (deleteError) {
+  alert('Erreur suppression : ' + deleteError.message);
+  return;
+}
   alert('Produit supprimé avec succès !');
   location.href = 'produits.html';
 }); }
   }
+    })();
 </script>
 
 </body>
