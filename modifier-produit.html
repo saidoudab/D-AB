@@ -156,7 +156,16 @@ const supabaseClient = window.supabase.createClient(
     location.href = 'produits.html';
     return;
   }
+const {
+  data: { user },
+  error: userError
+} = await supabaseClient.auth.getUser();
 
+if (userError || !user || data.entreprise_id !== user.id) {
+  alert('Vous ne pouvez pas modifier ce produit.');
+  location.href = 'produits.html';
+  return;
+}
   produit = data;
 
   document.getElementById('nomProduit').value = produit.nom || '';
