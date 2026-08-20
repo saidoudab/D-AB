@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produit - D-AB</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fa;
+      color: #172033;
+    }
+
+    header {
+      background: #172033;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #172033;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .image-box {
+      width: 100%;
+      min-height: 220px;
+      background: #edf0f5;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 90px;
+      overflow: hidden;
+    }
+
+    .image-box img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+    }
+
+    .description {
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .seller {
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .whatsapp {
+      background: #172033;
+      color: white;
+    }
+
+    .panier {
+      background: #ffb703;
+      color: #172033;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>D-AB</h1>
+</header>
+
+<main class="container">
+
+  <a class="back" href="produits.html">← Retour aux produits</a>
+
+  <div class="card" id="ficheProduit"></div>
+
+</main>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const index = Number(params.get('id'));
+
+  const produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
+  const produit = produits[index];
+
+  const fiche = document.getElementById('ficheProduit');
+
+  if (!produit) {
+    fiche.innerHTML = '<h2>Produit introuvable</h2>';
+  } else {
+
+    let numeroWhatsApp = String(produit.telephone || '').replace(/\D/g, '');
+    numeroWhatsApp = numeroWhatsApp.replace(/^00/, '');
+
+    if (numeroWhatsApp.length === 8) {
+      numeroWhatsApp = '226' + numeroWhatsApp;
+    }
+
+    const image = produit.photo
+      ? '<img src="' + produit.photo + '" alt="' + produit.nom + '">'
+      : '📦';
+
+    fiche.innerHTML =
+      '<div class="image-box">' + image + '</div>' +
+      '<h2>' + produit.nom + '</h2>' +
+      '<p class="description">' + produit.description + '</p>' +
+      '<div class="price">' +
+      Number(String(produit.prix).replace(/\D/g, '')).toLocaleString('fr-FR') +
+      ' FCFA</div>' +
+      '<div class="seller">Vendeur : ' +
+      (produit.entreprise || 'D-AB Marketplace') +
+      '</div>' +
+      (numeroWhatsApp
+        ? '<a class="btn whatsapp" href="https://wa.me/' + numeroWhatsApp + '">WhatsApp</a>'
+        : '') +
+      '<button class="btn panier" id="ajouterPanier">+ Panier</button>';
+
+    document.getElementById('ajouterPanier').addEventListener('click', function() {
+      let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
+
+      const prix = Number(String(produit.prix).replace(/\D/g, ''));
+
+      let existant = panier.find(function(p) {
+        return p.nom === produit.nom;
+      });
+
+      if (existant) {
+        existant.quantite = (existant.quantite || 1) + 1;
+      } else {
+        panier.push({
+          nom: produit.nom,
+          prix: prix,
+          quantite: 1
+        });
+      }
+
+      localStorage.setItem('panierDAB', JSON.stringify(panier));
+      alert(produit.nom + ' a été ajouté au panier !');
+    });
+  }
+</script>
+
+</body>
+</html>
