@@ -127,45 +127,98 @@
   </div>
 
 </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  const SUPABASE_URL = 'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
   const form = document.getElementById('formProduit');
-  form.addEventListener('submit', function(event) {
+  form.addEventListener('submit', async function(event) {
     event.preventDefault();
+    const {
+  data: { user },
+  error: userError
+} = await supabaseClient.auth.getUser();
+
+if (userError || !user) {
+  alert('Votre connexion entreprise a expiré. Reconnectez-vous.');
+  location.href = 'connexion-entreprise.html';
+  return;
+}
     const nom = document.getElementById('nomProduit').value;
     const description = document.getElementById('descriptionProduit').value;
     const prix = document.getElementById('prixProduit').value;
     const entreprise = document.getElementById('entrepriseProduit').value;
     const telephone = document.getElementById('telephoneProduit').value;
     const photo = document.getElementById('photoProduit').files[0];
-    function enregistrerProduit(photoData) {
-  const produit = {
-    nom,
-    description,
-    prix,
-    entreprise,
-    telephone,
-    photo: photoData || ''
-  };
-
-  let produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
-  produits.push(produit);
-  localStorage.setItem('produitsDAB', JSON.stringify(produits));
-
-  alert('Produit publié avec succès !');
-  form.reset();
-}
+    async function enregistrerProduit(photoData) {
+   let photoUrl = '';
 
 if (photo) {
-  const reader = new FileReader();
+  const extension = photo.name.split('.').pop();
+  const nomFichier =
+    user.id + '/' + Date.now() + '.' + extension;
 
-  reader.onload = function(e) {
-    enregistrerProduit(e.target.result);
-  };
+  const { error: uploadError } =
+    await supabaseClient.storage
+      .from('produits')
+      .upload(nomFichier, photo);
 
-  reader.readAsDataURL(photo);
-} else {
-  enregistrerProduit('');
+  if (uploadError) {
+    alert('Erreur photo : ' + uploadError.message);
+    return;
   }
+
+  const { data: urlData } =
+    supabaseClient.storage
+      .from('produits')
+      .getPublicUrl(nomFichier);
+
+  photoUrl = urlData.publicUrl;
+}
+
+const prixNombre =
+  Number(String(prix).replace(/\D/g, ''));
+
+const { error: profilError } =
+  await supabaseClient
+    .from('entreprises')
+    .update({
+      nom: entreprise,
+      telephone: telephone
+    })
+    .eq('id', user.id);
+
+if (profilError) {
+  alert('Erreur entreprise : ' + profilError.message);
+  return;
+}
+
+const { error } =
+  await supabaseClient
+    .from('produits')
+    .insert({
+      entreprise_id: user.id,
+      nom: nom,
+      description: description,
+      prix: prixNombre,
+      photo_url: photoUrl
+    });
+
+if (error) {
+  alert('Erreur publication : ' + error.message);
+  return;
+}
+
+alert('Produit publié avec succès !');
+form.reset();
+}
+
+await enregistrerProduit();
     });
   </script>
     
