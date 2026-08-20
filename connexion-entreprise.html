@@ -99,13 +99,20 @@
     <p id="explication"></p>
 
     <form id="formConnexion">
-
+      <label>Nom de l’entreprise</label>
+<input id="nomEntreprise" type="text">
+<label>E-mail de l’entreprise</label>
+<input id="emailEntreprise" type="email" required>
       <label>Mot de passe</label>
       <input id="motDePasse" type="password" required>
 
       <button type="submit" id="boutonConnexion">
-        Continuer
-      </button>
+  Se connecter
+</button>
+
+<button type="button" id="boutonCreation">
+  Créer un compte entreprise
+</button>
 
     </form>
 
@@ -115,69 +122,90 @@
 
 </main>
 
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-  const motDePasseEnregistre =
-    localStorage.getItem('motDePasseEntreprise');
+const SUPABASE_URL = 'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
 
-  const explication =
-    document.getElementById('explication');
-
-  const bouton =
-    document.getElementById('boutonConnexion');
-
-  if (motDePasseEnregistre) {
-    explication.textContent =
-      'Entrez votre mot de passe entreprise.';
-    bouton.textContent = 'Se connecter';
-  } else {
-    explication.textContent =
-      'Créez votre mot de passe entreprise.';
-    bouton.textContent = 'Créer le mot de passe';
-  }
-
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
   document.getElementById('formConnexion')
-    .addEventListener('submit', function(event) {
+  .addEventListener('submit', async function(event) {
 
-      event.preventDefault();
+    event.preventDefault();
 
-      const motDePasse =
-        document.getElementById('motDePasse').value;
+    const email =
+      document.getElementById('emailEntreprise').value.trim();
 
-      const motDePasseActuel =
-        localStorage.getItem('motDePasseEntreprise');
+    const motDePasse =
+      document.getElementById('motDePasse').value;
 
-      if (!motDePasseActuel) {
+    const { error } =
+      await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: motDePasse
+      });
 
-        localStorage.setItem(
-          'motDePasseEntreprise',
-          motDePasse
-        );
+    if (error) {
+      document.getElementById('message').textContent =
+        'E-mail ou mot de passe incorrect.';
+      return;
+    }
 
-        localStorage.setItem(
-          'modeEntreprise',
-          'true'
-        );
+    localStorage.setItem('modeEntreprise', 'true');
 
-        alert('Mot de passe entreprise créé !');
-        location.href = 'ajouter-produit.html';
+    location.href = 'ajouter-produit.html';
+  });
+  
 
-      } else if (motDePasse === motDePasseActuel) {
+document.getElementById('boutonCreation')
+  .addEventListener('click', async function() {
 
-        localStorage.setItem(
-          'modeEntreprise',
-          'true'
-        );
+    const nom =
+      document.getElementById('nomEntreprise').value.trim();
 
-        location.href = 'ajouter-produit.html';
+    const email =
+      document.getElementById('emailEntreprise').value.trim();
 
-      } else {
+    const motDePasse =
+      document.getElementById('motDePasse').value;
 
-        document.getElementById('message')
-          .textContent = 'Mot de passe incorrect.';
+    if (!nom) {
+      document.getElementById('message').textContent =
+        'Entrez le nom de votre entreprise.';
+      return;
+    }
 
-      }
+    const { data, error } =
+      await supabaseClient.auth.signUp({
+        email: email,
+        password: motDePasse,
+        options: {
+          data: {
+            nom_entreprise: nom
+          }
+        }
+      });
 
-    });
+    if (error) {
+      document.getElementById('message').textContent =
+        error.message;
+      return;
+    }
+
+    if (data.session) {
+      localStorage.setItem('modeEntreprise', 'true');
+      location.href = 'ajouter-produit.html';
+    } else {
+      document.getElementById('message').textContent =
+        'Compte créé. Vérifiez votre e-mail pour confirmer votre inscription.';
+    }
+  });
 </script>
 
 </body>
