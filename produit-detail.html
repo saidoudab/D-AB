@@ -141,7 +141,7 @@
   const produit = produits[index];
 
   const fiche = document.getElementById('ficheProduit');
-
+const modeEntreprise = localStorage.getItem('modeEntreprise') === 'true';
   if (!produit) {
     fiche.innerHTML = '<h2>Produit introuvable</h2>';
   } else {
@@ -173,7 +173,10 @@
       '<button class="btn panier" id="ajouterPanier">+ Panier</button>' +
 '<button class="btn modifier" id="modifierProduit">Modifier le produit</button>' +
 '<button class="btn supprimer" id="supprimerProduit">Supprimer le produit</button>';
-
+if (!modeEntreprise) {
+  document.getElementById('modifierProduit').style.display = 'none';
+  document.getElementById('supprimerProduit').style.display = 'none';
+}
     document.getElementById('ajouterPanier').addEventListener('click', function() {
       let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
 
@@ -196,6 +199,7 @@
       localStorage.setItem('panierDAB', JSON.stringify(panier));
       alert(produit.nom + ' a été ajouté au panier !');
     });
+    if (modeEntreprise) {
     document.getElementById('modifierProduit').addEventListener('click', function() {
   location.href = 'modifier-produit.html?id=' + index;
 });
@@ -209,7 +213,7 @@
 
   alert('Produit supprimé avec succès !');
   location.href = 'produits.html';
-});
+}); }
   }
 </script>
 
