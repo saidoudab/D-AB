@@ -162,7 +162,8 @@
       (numeroWhatsApp
         ? '<a class="btn whatsapp" href="https://wa.me/' + numeroWhatsApp + '">WhatsApp</a>'
         : '') +
-      '<button class="btn panier" id="ajouterPanier">+ Panier</button>';
+      '<button class="btn panier" id="ajouterPanier">+ Panier</button>' +
+'<button class="btn supprimer" id="supprimerProduit">Supprimer le produit</button>';
 
     document.getElementById('ajouterPanier').addEventListener('click', function() {
       let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
@@ -186,6 +187,17 @@
       localStorage.setItem('panierDAB', JSON.stringify(panier));
       alert(produit.nom + ' a été ajouté au panier !');
     });
+    document.getElementById('supprimerProduit').addEventListener('click', function() {
+  const confirmation = confirm('Voulez-vous vraiment supprimer ce produit ?');
+
+  if (!confirmation) return;
+
+  produits.splice(index, 1);
+  localStorage.setItem('produitsDAB', JSON.stringify(produits));
+
+  alert('Produit supprimé avec succès !');
+  location.href = 'produits.html';
+});
   }
 </script>
 
