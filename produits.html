@@ -579,29 +579,26 @@
     const carte = document.createElement('div');
     carte.className = 'product';
     carte.innerHTML += '<div class="product-image">' + (produit.photo ? '<img src="' + produit.photo + '" class="product-img">' : '📦') + '</div>';
-    carte.innerHTML += '<div class="product-content"><h3>' + produit.nom + '</h3>';
-    carte.innerHTML += '<p class="description">' + produit.description + '</p>';
-    carte.innerHTML += '<div class="price">' + Number(String(produit.prix).replace(/\D/g, '')).toLocaleString('fr-FR') + ' FCFA' + '</div>';
-    carte.innerHTML += '<div class="seller">' + (produit.entreprise || 'D-AB Marketplace') + '</div>';
-
-let numeroWhatsApp = String(produit.telephone || '').replace(/\D/g, '');
+    let numeroWhatsApp = String(produit.telephone || '').replace(/\D/g, '');
 numeroWhatsApp = numeroWhatsApp.replace(/^00/, '');
 
 if (numeroWhatsApp.length === 8) {
   numeroWhatsApp = '226' + numeroWhatsApp;
 }
 
-carte.innerHTML += '<div class="buttons">';
-
-if (numeroWhatsApp) {
-  carte.innerHTML += '<button class="btn btn-contact" onclick="location.href=\'https://wa.me/' + numeroWhatsApp + '\'">WhatsApp</button>';
-} else {
-  carte.innerHTML += '<button class="btn btn-contact" disabled>WhatsApp</button>';
-}
-
-carte.innerHTML += '<button class="btn btn-cart">+ Panier</button>';
-carte.innerHTML += '</div>';
-carte.innerHTML += '</div>';
+carte.innerHTML +=
+  '<div class="product-content">' +
+  '<h3>' + produit.nom + '</h3>' +
+  '<p class="description">' + produit.description + '</p>' +
+  '<div class="price">' + Number(String(produit.prix).replace(/\D/g, '')).toLocaleString('fr-FR') + ' FCFA</div>' +
+  '<div class="seller">' + (produit.entreprise || 'D-AB Marketplace') + '</div>' +
+  '<div class="buttons">' +
+  (numeroWhatsApp
+    ? '<button class="btn btn-contact" onclick="location.href=\'https://wa.me/' + numeroWhatsApp + '\'">WhatsApp</button>'
+    : '<button class="btn btn-contact" disabled>WhatsApp</button>') +
+  '<button class="btn btn-cart">+ Panier</button>' +
+  '</div>' +
+  '</div>';
 const boutonPanier = carte.querySelector('.btn-cart');
 
 boutonPanier.addEventListener('click', function() {
