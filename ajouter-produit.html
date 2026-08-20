@@ -137,17 +137,35 @@
     const entreprise = document.getElementById('entrepriseProduit').value;
     const telephone = document.getElementById('telephoneProduit').value;
     const photo = document.getElementById('photoProduit').files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const photoData = e.target.result;
-        const produit = { nom, description, prix, entreprise, telephone, photo: photoData };
-    let produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
-    produits.push(produit);
-    localStorage.setItem('produitsDAB', JSON.stringify(produits));
-    alert('Produit publié avec succès !');
-    form.reset();
-      };
-    reader.readAsDataURL(photo);
+    function enregistrerProduit(photoData) {
+  const produit = {
+    nom,
+    description,
+    prix,
+    entreprise,
+    telephone,
+    photo: photoData || ''
+  };
+
+  let produits = JSON.parse(localStorage.getItem('produitsDAB')) || [];
+  produits.push(produit);
+  localStorage.setItem('produitsDAB', JSON.stringify(produits));
+
+  alert('Produit publié avec succès !');
+  form.reset();
+}
+
+if (photo) {
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    enregistrerProduit(e.target.result);
+  };
+
+  reader.readAsDataURL(photo);
+} else {
+  enregistrerProduit('');
+  }
     });
   </script>
     
