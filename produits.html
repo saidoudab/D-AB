@@ -618,7 +618,7 @@ if (modeEntreprise) {
 
 carte.addEventListener('click', function(event) {
   if (event.target.closest('button')) return;
-  location.href = 'produit-detail.html?id=' + index;
+  location.href = 'produit-detail.html?id=' + produit.id;
 });
     carte.innerHTML += '<div class="product-image">' + (produit.photo ? '<img src="' + produit.photo + '" class="product-img">' : '📦') + '</div>';
     let numeroWhatsApp = String(produit.telephone || '').replace(/\D/g, '');
