@@ -54,21 +54,44 @@
       margin-bottom: 30px;
     }
 
+    .section-title {
+      font-size: 30px;
+      margin: 45px 0 25px;
+    }
+
+    .ajouter-realisation {
+      display: none;
+      width: 100%;
+      background: #ffb703;
+      color: #172033;
+      text-decoration: none;
+      text-align: center;
+      padding: 17px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
     .realisation {
       background: white;
       border-radius: 28px;
       padding: 35px 45px;
       margin-bottom: 28px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    } 
-.realisation img {
-  width: 100%;
-  max-width: 350px;
-  height: auto;
-  border-radius: 12px;
-  display: block;
-  margin: 0 auto 15px;
-}
+    }
+
+    .realisation img {
+      width: 100%;
+      max-width: 350px;
+      height: auto;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
     .realisation h2 {
       font-size: 28px;
       margin-bottom: 20px;
@@ -77,6 +100,19 @@
     .realisation p {
       color: #737986;
       font-size: 20px;
+      line-height: 1.5;
+    }
+
+    .entreprise {
+      margin-top: 18px;
+      color: #172033 !important;
+      font-weight: bold;
+      font-size: 18px !important;
+    }
+
+    .vide {
+      color: #737986;
+      font-size: 19px;
       line-height: 1.5;
     }
 
@@ -97,27 +133,211 @@
 
 <main class="container">
 
-  <a class="back" href="services.html">← Retour à l'accueil</a>
+  <a class="back" href="index.html">
+    ← Retour à l'accueil
+  </a>
 
   <h2 class="title">📸 Réalisations</h2>
-<a href="construction-maison.html" style="text-decoration:none; color:inherit;">
-  <div class="realisation"> <img src="20240530_094225.jpg" alt="Réalisation D-AB">
-    <h2>Construction d’une maison</h2>
-    <p>Construction complète d’une maison, de la fondation aux finitions.</p>
+
+  <a
+    id="ajouterRealisation"
+    class="ajouter-realisation"
+    href="ajouter-realisation.html"
+  >
+    + Ajouter une réalisation
+  </a>
+
+  <a
+    href="construction-maison.html"
+    style="text-decoration:none; color:inherit;"
+  >
+    <div class="realisation">
+
+      <img
+        src="20240530_094225.jpg"
+        alt="Réalisation D-AB"
+      >
+
+      <h2>Construction d’une maison</h2>
+
+      <p>
+        Construction complète d’une maison,
+        de la fondation aux finitions.
+      </p>
+
+    </div>
+  </a>
+
+  <a
+    href="maison-cloture.html"
+    style="text-decoration:none; color:inherit;"
+  >
+    <div class="realisation">
+
+      <img
+        src="IMG_20260817_114811.jpg"
+        alt="Maison avec clôture"
+      >
+
+      <h2>Maison avec clôture</h2>
+
+      <p>
+        Construction d’une maison avec réalisation
+        de la clôture et pose du portail.
+      </p>
+
+    </div>
+  </a>
+
+  <h2 class="section-title">
+    Réalisations des entreprises
+  </h2>
+
+  <div id="realisationsEntreprises">
+    <p class="vide">
+      Chargement des réalisations...
+    </p>
   </div>
-</a>
-  
-<a href="maison-cloture.html" style="text-decoration:none; color:inherit;">
-  <div class="realisation"> <img src="IMG_20260817_114811.jpg" alt="Réalisation 3">
-    <h2>Maison avec clôture</h2>
-    <p>Construction d’une maison avec réalisation de la clôture et pose du portail.</p>
-  </div>
-</a>
+
 </main>
 
 <footer>
   © 2026 D-AB - Tous droits réservés
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL =
+    'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+
+  const SUPABASE_KEY =
+    'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+  const ajouterRealisation =
+    document.getElementById(
+      'ajouterRealisation'
+    );
+
+  const zoneRealisations =
+    document.getElementById(
+      'realisationsEntreprises'
+    );
+
+  const modeEntreprise =
+    localStorage.getItem(
+      'modeEntreprise'
+    ) === 'true';
+
+  async function initialiser() {
+
+    const {
+      data: { user }
+    } =
+      await supabaseClient.auth.getUser();
+
+    if (modeEntreprise && user) {
+      ajouterRealisation.style.display =
+        'block';
+    }
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('realisations')
+        .select(
+          'id, entreprise_id, titre, description, photo_url, created_at, entreprises(nom)'
+        )
+        .order(
+          'created_at',
+          { ascending: false }
+        );
+
+    zoneRealisations.innerHTML = '';
+
+    if (error) {
+
+      zoneRealisations.innerHTML =
+        '<p class="vide">Impossible de charger les réalisations.</p>';
+
+      return;
+    }
+
+    if (!data || data.length === 0) {
+
+      zoneRealisations.innerHTML =
+        '<p class="vide">Aucune réalisation publiée par une entreprise pour le moment.</p>';
+
+      return;
+    }
+
+    data.forEach(function(realisation) {
+
+      const carte =
+        document.createElement('div');
+
+      carte.className =
+        'realisation';
+
+      if (realisation.photo_url) {
+
+        const image =
+          document.createElement('img');
+
+        image.src =
+          realisation.photo_url;
+
+        image.alt =
+          realisation.titre;
+
+        carte.appendChild(image);
+      }
+
+      const titre =
+        document.createElement('h2');
+
+      titre.textContent =
+        realisation.titre;
+
+      const description =
+        document.createElement('p');
+
+      description.textContent =
+        realisation.description;
+
+      const entreprise =
+        document.createElement('p');
+
+      entreprise.className =
+        'entreprise';
+
+      entreprise.textContent =
+        'Entreprise : ' +
+        (
+          realisation.entreprises &&
+          realisation.entreprises.nom
+            ? realisation.entreprises.nom
+            : 'Entreprise D-AB'
+        );
+
+      carte.appendChild(titre);
+      carte.appendChild(description);
+      carte.appendChild(entreprise);
+
+      zoneRealisations.appendChild(carte);
+    });
+  }
+
+  initialiser();
+</script>
 
 </body>
 </html>
