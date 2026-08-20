@@ -159,4 +159,62 @@
     if (
       userError ||
       !user ||
-      data.entreprise_id !== user
+      data.entreprise_id !== user.id
+          ) {
+      alert('Vous ne pouvez pas modifier ce service.');
+      location.href = 'services.html';
+      return;
+    }
+
+    service = data;
+
+    document.getElementById('nomService').value =
+      service.nom || '';
+
+    document.getElementById('descriptionService').value =
+      service.description || '';
+  }
+
+  form.addEventListener(
+    'submit',
+    async function(event) {
+
+      event.preventDefault();
+
+      if (!service) return;
+
+      const nom =
+        document.getElementById('nomService')
+          .value.trim();
+
+      const description =
+        document.getElementById('descriptionService')
+          .value.trim();
+
+      const { error } =
+        await supabaseClient
+          .from('services')
+          .update({
+            nom: nom,
+            description: description
+          })
+          .eq('id', idService);
+
+      if (error) {
+        alert(
+          'Erreur modification : ' +
+          error.message
+        );
+        return;
+      }
+
+      alert('Service modifié avec succès !');
+      location.href = 'services.html';
+    }
+  );
+
+  chargerService();
+</script>
+
+</body>
+</html>
