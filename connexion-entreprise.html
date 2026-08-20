@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion entreprise - D-AB</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      color: #172033;
+    }
+
+    header {
+      background: #172033;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #172033;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 18px;
+      margin-bottom: 7px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #ffb703;
+      color: #172033;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 15px;
+      color: #d62828;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>D-AB</h1>
+  <p>Connexion entreprise</p>
+</header>
+
+<main class="container">
+
+  <a class="back" href="produits.html">← Retour aux produits</a>
+
+  <div class="card">
+
+    <h2 id="titre">Espace entreprise</h2>
+
+    <p id="explication"></p>
+
+    <form id="formConnexion">
+
+      <label>Mot de passe</label>
+      <input id="motDePasse" type="password" required>
+
+      <button type="submit" id="boutonConnexion">
+        Continuer
+      </button>
+
+    </form>
+
+    <div id="message"></div>
+
+  </div>
+
+</main>
+
+<script>
+  const motDePasseEnregistre =
+    localStorage.getItem('motDePasseEntreprise');
+
+  const explication =
+    document.getElementById('explication');
+
+  const bouton =
+    document.getElementById('boutonConnexion');
+
+  if (motDePasseEnregistre) {
+    explication.textContent =
+      'Entrez votre mot de passe entreprise.';
+    bouton.textContent = 'Se connecter';
+  } else {
+    explication.textContent =
+      'Créez votre mot de passe entreprise.';
+    bouton.textContent = 'Créer le mot de passe';
+  }
+
+  document.getElementById('formConnexion')
+    .addEventListener('submit', function(event) {
+
+      event.preventDefault();
+
+      const motDePasse =
+        document.getElementById('motDePasse').value;
+
+      const motDePasseActuel =
+        localStorage.getItem('motDePasseEntreprise');
+
+      if (!motDePasseActuel) {
+
+        localStorage.setItem(
+          'motDePasseEntreprise',
+          motDePasse
+        );
+
+        localStorage.setItem(
+          'modeEntreprise',
+          'true'
+        );
+
+        alert('Mot de passe entreprise créé !');
+        location.href = 'ajouter-produit.html';
+
+      } else if (motDePasse === motDePasseActuel) {
+
+        localStorage.setItem(
+          'modeEntreprise',
+          'true'
+        );
+
+        location.href = 'ajouter-produit.html';
+
+      } else {
+
+        document.getElementById('message')
+          .textContent = 'Mot de passe incorrect.';
+
+      }
+
+    });
+</script>
+
+</body>
+</html>
