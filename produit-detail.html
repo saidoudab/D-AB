@@ -156,7 +156,16 @@ const modeEntreprise = localStorage.getItem('modeEntreprise') === 'true';
       .select('id, entreprise_id, nom, description, prix, photo_url, entreprises(nom, telephone)')
       .eq('id', idProduit)
       .single();
+const { data: authData } = await supabaseClient.auth.getUser();
 
+const utilisateur =
+  authData && authData.user ? authData.user : null;
+
+const peutGererProduit =
+  modeEntreprise &&
+  utilisateur &&
+  produit &&
+  produit.entreprise_id === utilisateur.id;
   if (produit) {
     produit.photo = produit.photo_url || '';
     produit.entreprise =
@@ -198,7 +207,7 @@ const modeEntreprise = localStorage.getItem('modeEntreprise') === 'true';
       '<button class="btn panier" id="ajouterPanier">+ Panier</button>' +
 '<button class="btn modifier" id="modifierProduit">Modifier le produit</button>' +
 '<button class="btn supprimer" id="supprimerProduit">Supprimer le produit</button>';
-if (!modeEntreprise) {
+if (!peutGererProduit) {
   document.getElementById('modifierProduit').style.display = 'none';
   document.getElementById('supprimerProduit').style.display = 'none';
 }
@@ -224,7 +233,7 @@ if (!modeEntreprise) {
       localStorage.setItem('panierDAB', JSON.stringify(panier));
       alert(produit.nom + ' a été ajouté au panier !');
     });
-    if (modeEntreprise) {
+    if (peutGererProduit) {
     document.getElementById('modifierProduit').addEventListener('click', function() {
   location.href = 'modifier-produit.html?id=' + idProduit;
 });
