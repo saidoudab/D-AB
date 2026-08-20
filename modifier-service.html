@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modifier un service - D-AB</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      color: #172033;
+    }
+
+    header {
+      background: #172033;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #172033;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #ffb703;
+      color: #172033;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>D-AB</h1>
+  <p>Espace entreprise</p>
+</header>
+
+<main class="container">
+
+  <a class="back" href="services.html">← Retour aux services</a>
+
+  <div class="card">
+    <h2>Modifier le service</h2>
+
+    <form id="formService">
+
+      <label>Nom du service</label>
+      <input id="nomService" type="text" required>
+
+      <label>Description</label>
+      <textarea id="descriptionService" required></textarea>
+
+      <button type="submit">Enregistrer les modifications</button>
+
+    </form>
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = 'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+  const params =
+    new URLSearchParams(window.location.search);
+
+  const idService =
+    params.get('id');
+
+  let service = null;
+
+  const form =
+    document.getElementById('formService');
+
+  async function chargerService() {
+
+    const { data, error } =
+      await supabaseClient
+        .from('services')
+        .select('id, entreprise_id, nom, description')
+        .eq('id', idService)
+        .single();
+
+    if (error || !data) {
+      alert('Service introuvable.');
+      location.href = 'services.html';
+      return;
+    }
+
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseClient.auth.getUser();
+
+    if (
+      userError ||
+      !user ||
+      data.entreprise_id !== user
