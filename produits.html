@@ -386,7 +386,7 @@
             WhatsApp
           </button>
 
-          <button class="btn btn-cart" onclick="ajouterPanier('Ciment 32,5R', 6000)">
+          <button class="btn btn-cart" onclick="ajouterPanier('Ciment 32,5R', 6000, 'Bâtir Plus Construction', '22606168510') ">
             + Panier
           </button>
 
@@ -645,12 +645,12 @@ const boutonPanier = carte.querySelector('.btn-cart');
 
 boutonPanier.addEventListener('click', function() {
   const prixPanier = Number(String(produit.prix).replace(/\D/g, ''));
-  ajouterPanier(produit.nom, prixPanier);
+  ajouterPanier(produit.nom, prixPanier, produit.entreprise, produit.telephone);
 });
 document.getElementById('liste-produits').appendChild(carte);
     });
     });
-function ajouterPanier(nom, prix) {
+function ajouterPanier(nom, prix, entreprise, telephone) {
     let panier = JSON.parse(localStorage.getItem('panierDAB')) || [];
 
     let produitExistant = panier.find(function(produit) {
@@ -663,6 +663,8 @@ function ajouterPanier(nom, prix) {
         panier.push({
             nom: nom,
             prix: prix,
+          entreprise: entreprise,
+telephone: telephone,
             quantite: 1
         });
     }
