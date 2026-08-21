@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réalisation - D-AB</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fa;
+      color: #172033;
+      padding-bottom: 30px;
+    }
+
+    header {
+      background: #172033;
+      color: white;
+      padding: 24px 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .back {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #ffb703;
+    }
+
+    main {
+      max-width: 700px;
+      margin: auto;
+      padding: 24px 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .photo {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      background: #edf0f5;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: 27px;
+    }
+
+    .description {
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .entreprise {
+      font-weight: bold;
+    }
+
+    .erreur {
+      color: #b00020;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="topbar">
+    <a class="back" href="realisations.html">←</a>
+    <div class="logo">D-<span>AB</span></div>
+    <div></div>
+  </div>
+</header>
+
+<main>
+  <div class="card" id="carte">
+    <p>Chargement...</p>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+async function initialiser() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  const carte = document.getElementById('carte');
+
+  if (!id) {
+    carte.innerHTML = '<p class="erreur">Réalisation introuvable.</p>';
+    return;
+  }
+
+  const SUPABASE_URL = 'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
+
+  const supabaseClient =
+    window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const { data, error } =
+    await supabaseClient
+      .from('realisations')
+      .select('id, titre, description, photo_url, entreprises(nom)')
+      .eq('id', id)
+      .single();
+
+  if (error || !data) {
+    carte.innerHTML = '<p class="erreur">Impossible de charger cette réalisation.</p>';
+    return;
+  }
+
+  const nomEntreprise =
+    data.entreprises && data.entreprises.nom
+      ? data.entreprises.nom
+      : 'Entreprise D-AB';
+
+  carte.innerHTML =
+    (data.photo_url
+      ? '<img class="photo" src="' + data.photo_url + '" alt="' + data.titre + '">'
+      : '') +
+    '<h1>' + data.titre + '</h1>' +
+    '<p class="description">' + data.description + '</p>' +
+    '<p class="entreprise">Entreprise : ' + nomEntreprise + '</p>';
+}
+
+initialiser();
+</script>
+
+</body>
+</html>
