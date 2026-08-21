@@ -286,6 +286,12 @@
 
       carte.className =
         'realisation';
+      carte.onclick = function(event) {
+  if (event.target.closest('button, a')) return;
+  location.href =
+    'realisation-detail.html?id=' +
+    encodeURIComponent(realisation.id);
+};
 
       if (realisation.photo_url) {
 
