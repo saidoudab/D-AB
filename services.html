@@ -269,7 +269,7 @@
         document.createElement('div');
 
       carte.className = 'service';
-carte.onclick = function() { location.href = 'service-detail.html?id=' + encodeURIComponent(service.id); };
+carte.onclick = function(event) { if (event.target.closest('button, a')) return; location.href = 'service-detail.html?id=' + encodeURIComponent(service.id); };
       const titre =
         document.createElement('h2');
 
