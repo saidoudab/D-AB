@@ -110,11 +110,12 @@
     </a>
   </div>
 </main>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  async function initialiser() {
   const params = new URLSearchParams(window.location.search);
   const service = params.get('service');
-
+const id = params.get('id');
   const services = {
     construction: {
       icon: '🏗️',
@@ -143,7 +144,29 @@
     }
   };
 
-  const data = services[service] || services.construction;
+  let data = services[service] || null;
+  if (id) {
+  const SUPABASE_URL = 'https://mkfjrwfnvroeonqmgsjw.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Ad4HQyLSi-83bvPRMu8f4Q_yCTor5JT';
+
+  const supabaseClient =
+    window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const { data: serviceEntreprise, error } =
+    await supabaseClient
+      .from('services')
+      .select('id, nom, description, entreprises(nom, telephone)')
+      .eq('id', id)
+      .single();
+
+  if (!error && serviceEntreprise) {
+    data = {
+      icon: '🛠️',
+      nom: serviceEntreprise.nom,
+      description: serviceEntreprise.description
+    };
+  }
+  }
 
   document.getElementById('serviceIcon').textContent = data.icon;
   document.getElementById('serviceNom').textContent = data.nom;
@@ -155,6 +178,10 @@
 
   document.getElementById('serviceWhatsapp').href =
     'https://wa.me/?text=' + message;
+    }
+
+initialiser();
+  
 </script>
 
 </body>
