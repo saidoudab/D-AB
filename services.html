@@ -363,7 +363,8 @@ carte.onclick = function(event) { if (event.target.closest('button, a')) return;
 
         modifier.addEventListener(
           'click',
-          function() {
+          function(event) {
+            event.stopPropagation();
             location.href =
               'modifier-service.html?id=' +
               service.id;
