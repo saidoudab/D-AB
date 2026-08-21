@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service - D-AB</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fa;
+      color: #172033;
+      padding-bottom: 30px;
+    }
+
+    header {
+      background: #172033;
+      color: white;
+      padding: 24px 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .back {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #ffb703;
+    }
+
+    main {
+      max-width: 700px;
+      margin: auto;
+      padding: 24px 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .icon {
+      font-size: 55px;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: 27px;
+    }
+
+    .description {
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .whatsapp {
+      display: block;
+      width: 100%;
+      background: #25D366;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      padding: 14px;
+      border-radius: 11px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="topbar">
+    <a class="back" href="services.html">←</a>
+    <div class="logo">D-<span>AB</span></div>
+    <div></div>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <div class="icon" id="serviceIcon">🔧</div>
+    <h1 id="serviceNom">Service</h1>
+    <p class="description" id="serviceDescription"></p>
+
+    <a class="whatsapp" id="serviceWhatsapp" href="#">
+      Demander un devis sur WhatsApp
+    </a>
+  </div>
+</main>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const service = params.get('service');
+
+  const services = {
+    construction: {
+      icon: '🏗️',
+      nom: 'Construction & rénovation',
+      description: 'Construction, rénovation et travaux de bâtiment pour maisons et locaux professionnels.'
+    },
+    electricite: {
+      icon: '⚡',
+      nom: 'Installation électrique',
+      description: 'Installation, dépannage et entretien des équipements électriques pour maisons et locaux professionnels.'
+    },
+    menuiserie: {
+      icon: '🪵',
+      nom: 'Menuiserie',
+      description: 'Fabrication, installation et réparation de portes, fenêtres, meubles et autres ouvrages en bois.'
+    },
+    peinture: {
+      icon: '🎨',
+      nom: 'Peinture & décoration',
+      description: 'Travaux de peinture intérieure et extérieure, décoration et finition pour maisons et locaux professionnels.'
+    },
+    plomberie: {
+      icon: '🔧',
+      nom: 'Plomberie',
+      description: 'Installation, réparation et entretien des équipements de plomberie pour maisons et locaux professionnels.'
+    }
+  };
+
+  const data = services[service] || services.construction;
+
+  document.getElementById('serviceIcon').textContent = data.icon;
+  document.getElementById('serviceNom').textContent = data.nom;
+  document.getElementById('serviceDescription').textContent = data.description;
+
+  const message = encodeURIComponent(
+    'Bonjour, je souhaite demander un devis pour le service ' + data.nom + '.'
+  );
+
+  document.getElementById('serviceWhatsapp').href =
+    'https://wa.me/?text=' + message;
+</script>
+
+</body>
+</html>
