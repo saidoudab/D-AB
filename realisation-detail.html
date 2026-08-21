@@ -100,6 +100,7 @@
 </header>
 
 <main>
+  <a href="realisations.html" style="display:inline-block; margin-bottom:18px; font-size:18px; font-weight:bold;">← Retour aux réalisations</a>
   <div class="card" id="carte">
     <p>Chargement...</p>
   </div>
@@ -148,7 +149,10 @@ async function initialiser() {
       : '') +
     '<h1>' + data.titre + '</h1>' +
     '<p class="description">' + data.description + '</p>' +
-    '<p class="entreprise">Entreprise : ' + nomEntreprise + '</p>';
+    '<p class="entreprise">Entreprise : ' + nomEntreprise + '</p>' +
+'<a href="https://wa.me/?text=' +
+encodeURIComponent('Bonjour, je souhaite vous contacter pour un projet similaire à : ' + data.titre) +
+'">💬 Contacter pour un projet similaire</a>';
 }
 
 initialiser();
