@@ -636,7 +636,7 @@ carte.innerHTML +=
   '<div class="seller">' + (produit.entreprise || 'D-AB Marketplace') + '</div>' +
   '<div class="buttons">' +
   (numeroWhatsApp
-    ? '<button class="btn btn-contact" onclick="location.href=\'https://wa.me/' + numeroWhatsApp + '\'">WhatsApp</button>'
+      ? '<button class="btn btn-contact" onclick="event.stopPropagation(); location.href=\'https://wa.me/' + numeroWhatsApp + '?text=' + encodeURIComponent('Bonjour, je suis intéressé par le produit : ' + produit.nom) + '\'">WhatsApp</button>'
     : '<button class="btn btn-contact" disabled>WhatsApp</button>') +
   '<button class="btn btn-cart">+ Panier</button>' +
   '</div>' +
