@@ -180,7 +180,17 @@ document.getElementById('boutonCreation')
         'Entrez le nom de votre entreprise.';
       return;
     }
+if (!email) {
+  document.getElementById('message').textContent =
+    'Entrez l’adresse e-mail de votre entreprise.';
+  return;
+}
 
+if (!motDePasse) {
+  document.getElementById('message').textContent =
+    'Entrez votre mot de passe.';
+  return;
+}
     const { data, error } =
       await supabaseClient.auth.signUp({
         email: email,
