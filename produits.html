@@ -613,6 +613,21 @@ if (modeEntreprise) {
       };
     });
     const categorieChoisie = new URLSearchParams(window.location.search).get('categorie');
+    if (categorieChoisie) {
+  const categoriesFixes = {
+    'Ciment 32,5R': 'BTP',
+    'Fer à béton 12 mm': 'BTP',
+    'Peinture intérieure': 'Décoration',
+    'Carrelage 60×60': 'Décoration'
+  };
+
+  document.querySelectorAll('#liste-produits > .product').forEach(function(carte) {
+    const nom = carte.querySelector('h3')?.textContent.trim();
+    const categorie = categoriesFixes[nom] || '';
+    carte.style.display =
+      categorie.toLowerCase() === categorieChoisie.toLowerCase() ? '' : 'none';
+  });
+    }
 
 const produitsFiltres = categorieChoisie
   ? produits.filter(function(produit) {
