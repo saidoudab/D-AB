@@ -116,7 +116,20 @@
 
       <label>Téléphone / WhatsApp</label>
       <input id="telephoneProduit" type="tel" placeholder="+226 ..." required>
-
+            <label>Catégorie</label>
+            <select id="categorieProduit" required>
+                <option value="">Choisissez une catégorie</option>
+                <option value="BTP">BTP</option>
+                <option value="Électricité">Électricité</option>
+                <option value="Menuiserie">Menuiserie</option>
+                <option value="Décoration">Décoration</option>
+                <option value="Plomberie">Plomberie</option>
+                <option value="Alimentation">Alimentation et boissons</option>
+                <option value="Mode et couture">Mode et couture</option>
+                <option value="Artisanat">Artisanat</option>
+                <option value="Beauté et bien-être">Beauté et bien-être</option>
+                <option value="Autres">Autres</option>
+            </select>
       <label>Photo du produit</label>
       <input id="photoProduit" type="file" accept="image/*">
 
@@ -154,6 +167,7 @@ if (userError || !user) {
     const prix = document.getElementById('prixProduit').value;
     const entreprise = document.getElementById('entrepriseProduit').value;
     const telephone = document.getElementById('telephoneProduit').value;
+            const categorie = document.getElementById('categorieProduit').value;
     const photo = document.getElementById('photoProduit').files[0];
     async function enregistrerProduit(photoData) {
    let photoUrl = '';
@@ -206,6 +220,7 @@ const { error } =
       nom: nom,
       description: description,
       prix: prixNombre,
+                  categorie: categorie,
       photo_url: photoUrl
     });
 
