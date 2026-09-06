@@ -682,6 +682,17 @@ document.getElementById('searchInput').addEventListener('input', function () {
     produit.style.display = texte.includes(recherche) ? '' : 'none';
   });
 });
+  const params = new URLSearchParams(window.location.search);
+const categorieChoisie = params.get('categorie');
+
+if (categorieChoisie) {
+  const produits = document.querySelectorAll('.product');
+
+  produits.forEach(produit => {
+    const texte = produit.innerText.toLowerCase();
+    produit.style.display = texte.includes(categorieChoisie.toLowerCase()) ? '' : 'none';
+  });
+}
 </script>
 </body>
 </html>
