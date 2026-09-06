@@ -591,7 +591,7 @@ if (modeEntreprise) {
 }
   supabaseClient
   .from('produits')
-  .select('id, nom, description, prix, photo_url, entreprises(nom, telephone)')
+  .select('id, nom, description, prix, photo_url, categorie, entreprises(nom, telephone)')
   .order('created_at', { ascending: false })
   .then(function(result) {
 
@@ -607,11 +607,19 @@ if (modeEntreprise) {
         description: p.description || '',
         prix: p.prix,
         photo: p.photo_url || '',
+        categorie: p.categorie || '',
         entreprise: (p.entreprises && p.entreprises.nom) || 'D-AB Marketplace',
         telephone: (p.entreprises && p.entreprises.telephone) || ''
       };
     });
-  produits.forEach(function(produit, index) {
+    const categorieChoisie = new URLSearchParams(window.location.search).get('categorie');
+
+const produitsFiltres = categorieChoisie
+  ? produits.filter(function(produit) {
+      return (produit.categorie || '').toLowerCase() === categorieChoisie.toLowerCase();
+    })
+  : produits;
+  produitsFiltres.forEach(function(produit, index) {
     const carte = document.createElement('div');
     carte.className = 'product';
     carte.style.cursor = 'pointer';
