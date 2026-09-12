@@ -116,7 +116,8 @@
 
       <label>Téléphone / WhatsApp</label>
       <input id="telephoneProduit" type="tel" required>
-
+<label for="categorieProduit">Catégorie</label>
+<input id="categorieProduit" type="text" required>
       <label>Nouvelle photo (facultatif)</label>
       <input id="photoProduit" type="file" accept="image/*">
 
@@ -147,7 +148,7 @@ const supabaseClient = window.supabase.createClient(
   (async function chargerProduit() {
   const { data, error } = await supabaseClient
     .from('produits')
-    .select('id, entreprise_id, nom, description, prix, photo_url, entreprises(nom, telephone)')
+    .select('id, entreprise_id, nom, description,categorie,  prix, photo_url, entreprises(nom, telephone)')
     .eq('id', idProduit)
     .single();
 
@@ -171,6 +172,7 @@ if (userError || !user || data.entreprise_id !== user.id) {
   document.getElementById('nomProduit').value = produit.nom || '';
   document.getElementById('descriptionProduit').value = produit.description || '';
   document.getElementById('prixProduit').value = produit.prix || '';
+    document.getElementById('categorieProduit').value = produit.categorie || '';
   document.getElementById('entrepriseProduit').value =
     (produit.entreprises && produit.entreprises.nom) || '';
   document.getElementById('telephoneProduit').value =
@@ -183,6 +185,7 @@ if (userError || !user || data.entreprise_id !== user.id) {
     const nom = document.getElementById('nomProduit').value;
     const description = document.getElementById('descriptionProduit').value;
     const prix = document.getElementById('prixProduit').value;
+    const categorie = document.getElementById('categorieProduit').value.trim();
     const entreprise = document.getElementById('entrepriseProduit').value;
     const telephone = document.getElementById('telephoneProduit').value;
     const nouvellePhoto = document.getElementById('photoProduit').files[0];
@@ -212,6 +215,7 @@ if (userError || !user || data.entreprise_id !== user.id) {
         nom: nom,
         description: description,
         prix: prixNombre,
+        categorie: categorie,
         photo_url: photoUrl
       })
       .eq('id', idProduit);
